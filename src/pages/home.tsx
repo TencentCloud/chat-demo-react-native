@@ -37,7 +37,7 @@ function HomeScreen({route, navigation}: Props) {
   const getConversationList = async () => {
     const {code, data} = await TencentImSDKPlugin.v2TIMManager
       .getConversationManager()
-      .getConversationList(15, '');
+      .getConversationList(15, '0');
     if (code === 0) {
       setConversationList(data?.conversationList!);
     }

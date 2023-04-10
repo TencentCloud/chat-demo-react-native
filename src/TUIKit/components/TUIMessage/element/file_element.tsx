@@ -117,6 +117,7 @@ export const FileElement = (props: {
   }, [filePath]);
 
   const tabHandler = () => {
+    console.log('press');
     RNFS.exists(filePath).then(isExit => {
       if (isExit) {
         FileViewer.open(filePath, {showOpenWithDialog: true}) // absolute-path-to-my-local-file.

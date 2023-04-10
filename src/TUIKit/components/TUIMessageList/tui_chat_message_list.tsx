@@ -1,5 +1,6 @@
 import React, {useEffect, useRef} from 'react';
 import {LayoutChangeEvent, ListRenderItem, StyleSheet} from 'react-native';
+import {Keyboard} from 'react-native';
 import {FlatList} from 'react-native';
 import {View} from 'react-native';
 import type {V2TimMessage} from 'react-native-tim-js/lib/typescript/src/interface';
@@ -10,10 +11,12 @@ interface TUIMessageListProps {
   onLoadMore: (id: string) => void;
   unmount?: (messageList: V2TimMessage[]) => void;
   onLayout: (event: LayoutChangeEvent) => void;
+  onScroll: () => void;
 }
 
 export const TUIMessageList = (props: TUIMessageListProps) => {
   const messageRef = useRef<V2TimMessage[]>();
+  const messageListRef = useRef<FlatList<V2TimMessage> | null>();
   const {messageList, lastMsgId, messageListWithoutTimestamp} =
     useMessageList();
 
@@ -29,6 +32,17 @@ export const TUIMessageList = (props: TUIMessageListProps) => {
   useEffect(() => {
     messageRef.current = messageListWithoutTimestamp.slice(0, 10);
   }, [messageListWithoutTimestamp]);
+  useEffect(() => {
+    const callback = () => {
+      messageListRef.current?.scrollToIndex({
+        index: 0,
+      });
+    };
+    const submition = Keyboard.addListener('keyboardWillShow', callback);
+    return () => {
+      Keyboard.removeSubscription(submition);
+    };
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -40,6 +54,8 @@ export const TUIMessageList = (props: TUIMessageListProps) => {
   return (
     <View onLayout={props.onLayout}>
       <FlatList
+        onScroll={props.onScroll}
+        ref={ref => (messageListRef.current = ref)}
         onLayout={props.onLayout}
         style={styles.flatContainer}
         keyboardDismissMode="on-drag"

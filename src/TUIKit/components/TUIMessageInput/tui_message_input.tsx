@@ -228,10 +228,11 @@ const useStyles = makeStyles(theme => {
       flexDirection: 'row',
       paddingLeft: 15,
       paddingRight: 15,
-      height: 35,
+      // height: 35,
       backgroundColor: '#EDEDED',
       alignItems: 'center',
       paddingTop: 10,
+      paddingBottom: 10,
     },
     inputStyle: {
       height: 35,

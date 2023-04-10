@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useState } from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {
   HistoryMsgGetTypeEnum,
   TencentImSDKPlugin,
   V2TimAdvancedMsgListener,
   V2TimConversation,
 } from 'react-native-tim-js';
-import { MessageDownload } from '../utils/message_download';
+import {MessageDownload} from '../utils/message_download';
 import {
   addMessageItem,
   revokeMessage,
@@ -19,7 +19,7 @@ export const useMessageList = (conversation: V2TimConversation) => {
   //   const [message, setMessage] = useState<V2TimMessage[]>([]);
   const [loading] = useState(false);
   //   const [haveMore, setHaveMore] = useState(true);
-  const { dispatch } = useTUIChatContext();
+  const {dispatch} = useTUIChatContext();
 
   const loadMore = useCallback(
     async ({
@@ -41,10 +41,10 @@ export const useMessageList = (conversation: V2TimConversation) => {
           .getHistoryMessageList(
             10,
             HistoryMsgGetTypeEnum.V2TIM_GET_CLOUD_OLDER_MSG,
-            userID,
-            groupID,
+            userID === 'null' ? undefined : userID,
+            groupID === 'null' ? undefined : groupID,
             undefined,
-            lastMsgID
+            lastMsgID,
           );
         if (response.code === 0) {
           const responseMessageList = response.data ?? [];
@@ -63,11 +63,11 @@ export const useMessageList = (conversation: V2TimConversation) => {
         // setLoading(false);
       }
     },
-    [dispatch]
+    [dispatch],
   );
 
   useEffect(() => {
-    const { userID, groupID } = conversation;
+    const {userID, groupID} = conversation;
     loadMore({
       userID,
       groupID,
@@ -84,7 +84,7 @@ export const useMessageList = (conversation: V2TimConversation) => {
           if (messageProgress.isFinish) {
             MessageDownload.avoidUpdateTask =
               MessageDownload.avoidUpdateTask.filter(
-                (item) => item !== messageProgress.msgID
+                item => item !== messageProgress.msgID,
               );
           }
           return;
@@ -94,7 +94,7 @@ export const useMessageList = (conversation: V2TimConversation) => {
             updateMessageProgress({
               msgID: messageProgress.msgID,
               progress: 1,
-            })
+            }),
           );
           MessageDownload.doTask();
           return;
@@ -112,7 +112,7 @@ export const useMessageList = (conversation: V2TimConversation) => {
               updateMessageProgress({
                 msgID: messageProgress.msgID,
                 progress: progrss,
-              })
+              }),
             );
             return;
           }
@@ -122,7 +122,7 @@ export const useMessageList = (conversation: V2TimConversation) => {
         dispatch(
           revokeMessage({
             msgID,
-          })
+          }),
         );
       },
     };
@@ -137,5 +137,5 @@ export const useMessageList = (conversation: V2TimConversation) => {
     };
   }, [conversation, dispatch, loadMore]);
 
-  return { loading, loadMore };
+  return {loading, loadMore};
 };

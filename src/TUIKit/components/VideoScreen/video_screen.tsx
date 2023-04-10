@@ -5,6 +5,7 @@ import React from 'react';
 import {useRef, useState} from 'react';
 import {
   ActivityIndicator,
+  Platform,
   StyleSheet,
   TouchableWithoutFeedback,
   View,
@@ -67,6 +68,7 @@ export const VideoScreen = ({
             }}
             paused={isPause}
             repeat={false}
+            resizeMode={Platform.OS === 'android' ? 'cover' : undefined}
             style={[
               styles.fill,
               styles.black,
@@ -104,8 +106,8 @@ export const VideoScreen = ({
               height: styles.playContainer.height,
             }}
             onPress={() => {
-              player.current?.seek(0);
               setIsPause(false);
+              player.current?.seek(0);
             }}
           />
         </View>
@@ -165,6 +167,8 @@ export const VideoScreen = ({
 const styles = StyleSheet.create({
   fill: {
     flex: 1,
+    width: '100%',
+    height: '100%',
   },
   video: {
     maxHeight: 256,

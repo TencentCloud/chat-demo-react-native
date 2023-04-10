@@ -3,12 +3,9 @@ import {View, Button, TextInput, StyleSheet} from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../interface';
 import {TencentImSDKPlugin, LogLevelEnum} from 'react-native-tim-js';
+import {LOGIN_USER_ID, SDKAPPID, USER_SIG} from './config';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
-
-const LOGIN_USER_ID = '940928';
-const USER_SIG =
-  'eJwtzLEOgjAUheF36aqBS8u1lMRNjAOJgy4YFmML3hCxqVWbGN9dBMbzneT-sGN5iF7GsZzxCNhy3KRN76mhkVUKimfz89Dd2VrSLE9SgCSTAvn0mGDJmcERkQPApJ5uf1vJTAlUKp0r1A7hro67wotd82yqUvXvzWJfJCgvhmPYehn0-SpA2FPl6hjW7PsDJsQwvw__';
 
 function LoginScreen({navigation}: Props) {
   const [userID, setUserID] = useState(LOGIN_USER_ID);
@@ -20,12 +17,13 @@ function LoginScreen({navigation}: Props) {
 
   const init = async () => {
     await TencentImSDKPlugin.v2TIMManager.initSDK(
-      1400187352,
+      SDKAPPID,
       LogLevelEnum.V2TIM_LOG_DEBUG,
     );
   };
 
   const login = async () => {
+    console.log('login pressed');
     const {code} = await TencentImSDKPlugin.v2TIMManager.login(userID, userSig);
     if (code === 0) {
       navigation.navigate('Home', {

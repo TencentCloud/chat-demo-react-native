@@ -1,20 +1,15 @@
 import {Image} from '@rneui/themed';
 import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, TouchableOpacity} from 'react-native';
 import {V2TimMessage, TencentImSDKPlugin} from 'react-native-tim-js';
 import {CameraRoll} from '@react-native-camera-roll/camera-roll';
 import {MessageUtils} from '../../../utils/message';
-// import ImageView from 'react-native-image-viewing';
 import ImageViewer from '../../ImageView';
 import Modal from 'react-native-modal';
 import {MessageDownload} from '../../../utils/message_download';
 import RNFS from 'react-native-fs';
-import {
-  Gesture,
-  GestureDetector,
-  TouchableOpacity,
-} from 'react-native-gesture-handler';
+import {Gesture} from 'react-native-gesture-handler';
 import {ScreenWidth} from '@rneui/base';
 import FastImage from 'react-native-fast-image';
 
@@ -148,50 +143,57 @@ export const ImageElement = (props: {
   const longPressGesture = Gesture.Tap().onStart(() => {
     setOpacity(1);
     setIsVisible(true);
-    // console.log(' press start in element');
+    console.log(' press start in element');
   });
 
   return (
-    <GestureDetector gesture={longPressGesture}>
-      <View>
-        <TouchableOpacity activeOpacity={0.8}>
-          <Image
-            ImageComponent={FastImage}
-            containerStyle={[
-              styles.img,
-              {
-                width: getImageSize().width,
-                height: getImageSize().height,
-              },
-            ]}
-            source={{
-              uri: imagePath,
-            }}
-          />
-        </TouchableOpacity>
+    // <GestureDetector gesture={longPressGesture}>
+    <View>
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={() => {
+          console.log('press');
+          setOpacity(1);
+          setIsVisible(true);
+        }}>
+        <Image
+          ImageComponent={FastImage}
+          containerStyle={[
+            styles.img,
+            {
+              width: getImageSize().width,
+              height: getImageSize().height,
+            },
+          ]}
+          source={{
+            uri: imagePath,
+          }}
+        />
+      </TouchableOpacity>
 
-        <Modal
-          isVisible={visible}
-          backdropColor="black"
-          backdropOpacity={opacity}
-          animationIn="fadeIn"
-          animationOut="fadeOutDown"
-          style={{margin: 0}}>
-          <ImageViewer
-            onSwipeDown={() => setIsVisible(false)}
-            onClick={() => setIsVisible(false)}
-            renderFooter={renderFooter}
-            enableSwipeDown
-            enableImageZoom
-            imageUrls={[
-              {
-                url: imagePath,
-              },
-            ]}
-          />
-        </Modal>
-      </View>
-    </GestureDetector>
+      <Modal
+        isVisible={visible}
+        backdropColor="black"
+        backdropOpacity={opacity}
+        animationIn="fadeIn"
+        animationOut="fadeOutDown"
+        style={{margin: 0}}>
+        <ImageViewer
+          swipeDownThreshold={100}
+          onSwipeDown={() => setIsVisible(false)}
+          onClick={() => setIsVisible(false)}
+          renderFooter={renderFooter}
+          enableSwipeDown
+          enableImageZoom
+          imageUrls={[
+            {
+              url: imagePath,
+            },
+          ]}
+        />
+      </Modal>
+    </View>
+    // </GestureDetector>
   );
 };
 

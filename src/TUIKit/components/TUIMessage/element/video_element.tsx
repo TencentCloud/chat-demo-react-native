@@ -172,7 +172,7 @@ export const VideoElement = (props: {
         backdropOpacity={0}
         swipeDirection={['down', 'up', 'left', 'right']}
         onSwipeComplete={() => setVisible(false)}
-        swipeThreshold={300}
+        swipeThreshold={100}
         style={{margin: 0}}>
         <VideoScreen
           url={videoUrl}

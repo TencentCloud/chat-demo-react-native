@@ -247,6 +247,13 @@ const MessageViewWithInput = (props: TUIChatProps) => {
               toolbox.onMessageListLayout(event);
               keyboard.onMessageListLayout(event);
             }}
+            onScroll={() => {
+              if (driver?.name === 'emoji') {
+                emoji.shown && emoji.hide(driverState);
+              } else {
+                toolbox.shown && toolbox.hide(driverState);
+              }
+            }}
           />
         </Animated.View>
       </GestureDetector>

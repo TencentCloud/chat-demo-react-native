@@ -1,7 +1,7 @@
-import type { PropsWithChildren } from 'react';
-import type { V2TimConversation, V2TimMessage } from 'react-native-tim-js';
+import type {PropsWithChildren} from 'react';
+import type {V2TimConversation, V2TimMessage} from 'react-native-tim-js';
 
-export type MessageElement = React.ComponentType<{ message: V2TimMessage }>;
+export type MessageElement = React.ComponentType<{message: V2TimMessage}>;
 
 export interface TUIChatProps {
   conversation: V2TimConversation;

@@ -50,7 +50,6 @@ export class ViewDriver implements Driver {
   };
 
   hide = (state: DriverState) => {
-    console.log('hide');
     const {bottom, driver, setDriver, setTranslateY, setTranslateMLY} = state;
 
     this.shown = false;
