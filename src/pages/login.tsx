@@ -19,6 +19,8 @@ function LoginScreen({navigation}: Props) {
     await TencentImSDKPlugin.v2TIMManager.initSDK(
       SDKAPPID,
       LogLevelEnum.V2TIM_LOG_DEBUG,
+      undefined,
+      true,
     );
   };
 

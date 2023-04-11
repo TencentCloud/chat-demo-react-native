@@ -119,6 +119,10 @@ export class MessageService {
     height?: number,
     repliedMessage?: V2TimMessage,
   ) {
+    const isUIKit = TencentImSDKPlugin.v2TIMManager.getUIKitIdentification();
+    if (!isUIKit) {
+      throw new Error('Pleade pass isUIkit field at initialization!');
+    }
     const messageInfo = createdMessageData?.messageInfo;
     if (messageInfo) {
       const createdMsgID = createdMessageData.id;

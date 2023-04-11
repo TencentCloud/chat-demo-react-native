@@ -36,6 +36,11 @@ export const useMessageList = (conversation: V2TimConversation) => {
           return;
         }
         // setLoading(true);
+        const isUIKit =
+          TencentImSDKPlugin.v2TIMManager.getUIKitIdentification();
+        if (!isUIKit) {
+          throw new Error('Pleade pass isUIkit field at initialization!');
+        }
         const response = await TencentImSDKPlugin.v2TIMManager
           .getMessageManager()
           .getHistoryMessageList(

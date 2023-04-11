@@ -6033,9 +6033,9 @@ react-native-size-matters@^0.4.0:
   integrity sha512-8/C0htHrFWeUm9N8JegmadovUfgTWkGBkDPZ1N3YkXtDWb+98Ya2gThiKcu445r8c7YhcrBfnHz/mYsXIusaOQ==
 
 react-native-tim-js@^0.1.21:
-  version "0.1.21"
-  resolved "https://registry.yarnpkg.com/react-native-tim-js/-/react-native-tim-js-0.1.21.tgz#58cb19cc208e903da5d491ed6bca9a817b379a81"
-  integrity sha512-DlNGziiLZA2079EG55WfrL1ugPjltoF+JW+sjgR4tJg9FR8brcGF4fipxC9iTOlOiTL6SiYOYqapwM2tPl2UWA==
+  version "0.1.22"
+  resolved "https://registry.yarnpkg.com/react-native-tim-js/-/react-native-tim-js-0.1.22.tgz#4cf7e8c4de95b39dd597ab485fbf269652361821"
+  integrity sha512-4NgYnj1JQHKcA+PH34Nlz0QnZBlbJRwop9c1Jymg3lERLUkfijakOaV8di+MV41ie8MbbfC0+OO81TSeJz/eUw==
 
 react-native-vector-icons@^9.2.0:
   version "9.2.0"

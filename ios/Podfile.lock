@@ -353,7 +353,7 @@ PODS:
     - RCTTypeSafety
     - React-Core
     - ReactCommon/turbomodule/core
-  - react-native-tim-js (0.1.21):
+  - react-native-tim-js (0.1.22):
     - HydraAsync
     - React-Core
     - TXIMSDK_Plus_iOS (= 6.9.3557)
@@ -722,7 +722,7 @@ SPEC CHECKSUMS:
   react-native-document-picker: 495c444c0c773c6e83a5d91165890ecb1c0a399a
   react-native-image-picker: ec9b713e248760bfa0f879f0715391de4651a7cb
   react-native-safe-area-context: 39c2d8be3328df5d437ac1700f4f3a4f75716acc
-  react-native-tim-js: 2807107c9412ec47c1333b58db53ebdc040f4087
+  react-native-tim-js: 94a4a250e724a1146db718335e12fe87b544ef9c
   react-native-video: c26780b224543c62d5e1b2a7244a5cd1b50e8253
   React-perflogger: 43392072a5b867a504e2b4857606f8fc5a403d7f
   React-RCTActionSheet: c7b67c125bebeda9fb19fc7b200d85cb9d6899c4
