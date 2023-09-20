@@ -1,12 +1,27 @@
-本项目为 React Native Chat Demo, 它是由`react-native-tim-js`及社区相关的开源包开发的 Demo 项目, 可帮助您快速开发一个即时通信聊天场景应用。
+[简体中文](./README_CN.md) ｜ [English](./README.md)
 
-## 快速跑通 Demo
+## IM(Chat) React Native Demo
 
-### 环境搭建
+This project is React Native Chat Demo, which is a Demo project developed by `[react-native-tim-js](https://www.npmjs.com/package/react-native-tim-js)` and community-related open source packages. It can help you quickly develop an instant messaging chat scenario application.
 
-参考 React Naitve [官方文档](https://reactnative.dev/docs/environment-setup)搭建本地开发环境。
+## Perquisites
 
-### 依赖安装
+[Signed up](https://www.tencentcloud.com/document/product/378/17985?from=unity) for a Tencent Cloud account and completed [identity verification](https://www.tencentcloud.com/document/product/378/3629?from=unity).
+
+1. Created a chat application as instructed in [Creating and Upgrading an Application](https://www.tencentcloud.com/document/product/1047/34577?from=unity) and recorded the SDKAppID.
+   > The same Tencent Cloud account can create up to 300 instant messaging IM applications. If there are already 300 applications, you can [deactivate and delete](https://www.tencentcloud.com/document/product/1047/34540?lang=en&pg=) the unused applications before creating new ones . \*_After the application is deleted, all data and services corresponding to the SDKAppID cannot be recovered, please operate with caution._ > ![](https://main.qcloudimg.com/raw/15e61a874a0640d517eeb67e922a14bc.png)
+2. Record the SDKAppID. You can view the status, business version, SDKAppID, label, creation time, and expiration time of the newly created application on the console overview page.
+   ![](https://main.qcloudimg.com/raw/7954cc2882d050f68cd5d1df2ee776a6.png)
+3. Click the created application, click **Auxiliary Tools**>**UserSig Generation & Verification** in the left navigation bar, create a UserID and its corresponding UserSig, copy the signature information, and use it for subsequent logins.
+   ![](https://main.qcloudimg.com/raw/2286644d987d24caf565142ae30c4392.png)
+
+## How to start
+
+### Environment setup
+
+Refer to React Naitve [official document](https://reactnative.dev/docs/environment-setup) to build a local development environment.
+
+### Install dependences
 
 1: 在项目根目录下执行如下代码,安装项目所需依赖项:
 
@@ -20,30 +35,30 @@ cd ios
 pod install
 ```
 
-### 跑通运行
+### Run
 
-1: 请参考[官方文档](https://cloud.tencent.com/document/product/269/77272)准备`SDKAppID, UserSig`, 您必须拥有正确的 SDKAppID，才能进行初始化。
-2: 将准备好的`SDKAppID, UserSig`填入到`config.ts`文件中
-3: 执行如下命令运行:
+1. Fill in the prepared `SDKAppID, UserSig` into the `config.ts` file.
+2. Execute the following command to run:
 
 ```
 // yarn
 yarn android
 yarn ios
+
 // npm
 npm run android
 npm run ios
 ```
 
-### 常见问题
+### FAQ
 
-- 如何移植到现有项目中?
-  `src/TUIKit`中为`TUIChat`等相关组件，可以直接复制到您的项目中,同时您还需要安装对应的依赖即可, 对应的依赖查看`package.json`文件。
-- 在 expo 项目中如何使用?
-  在`expo`中，如果您使用到的 package 包含 Native 代码，需要您使用`development build`, 具体信息可查看其[官方文档](https://docs.expo.dev/home/develop/development-builds/introduction/).
-- Android 项目报错 Task :react-native-create-thumbnail:compileDebugJavaWithJavac FAILED 怎么解决?
-  请参考 https://github.com/souvik-ghosh/react-native-create-thumbnail/issues/87#issuecomment-1421105553
-- 出现应用闪退, 什么问题?
-  请检查权限是否申请。
-- 点击拍照无反应？
-  要是用拍照功能，请用真机调试。
+- How to integrate into existing projects?
+  `src/TUIKit` contains `TUIChat` and other related components, which can be copied directly to your project. At the same time, you also need to install the corresponding dependencies. For the corresponding dependencies, check the `package.json` file.
+- How to use it in Expo?
+  In `expo`, if the package you use contains Native code, you need to use `development build`. For detailed information, please check its [official document](https://docs.expo.dev/home/develop/development-builds/introduction/).
+- How to solve the Android project error `Task:react-native-create-thumbnail:compileDebugJavaWithJavac FAILED`?
+  Please refer to https://github.com/souvik-ghosh/react-native-create-thumbnail/issues/87#issuecomment-1421105553
+- App crash occurs?
+  Please check whether permission is applied.
+- No response when clicking to take a photo?
+  To use the camera function, please use a real device for debugging.
