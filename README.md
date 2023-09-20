@@ -2,7 +2,7 @@
 
 ## IM(Chat) React Native Demo
 
-This project is React Native Chat Demo, which is a Demo project developed by `[react-native-tim-js](https://www.npmjs.com/package/react-native-tim-js)` and community-related open source packages. It can help you quickly develop an instant messaging chat scenario application.
+This project is React Native Chat Demo, which is a Demo project developed by [react-native-tim-js](https://www.npmjs.com/package/react-native-tim-js) and community-related open source packages. It can help you quickly develop an instant messaging chat scenario application.
 
 ## Perquisites
 
@@ -53,12 +53,21 @@ npm run ios
 ### FAQ
 
 - How to integrate into existing projects?
+
   `src/TUIKit` contains `TUIChat` and other related components, which can be copied directly to your project. At the same time, you also need to install the corresponding dependencies. For the corresponding dependencies, check the `package.json` file.
+
 - How to use it in Expo?
+
   In `expo`, if the package you use contains Native code, you need to use `development build`. For detailed information, please check its [official document](https://docs.expo.dev/home/develop/development-builds/introduction/).
+
 - How to solve the Android project error `Task:react-native-create-thumbnail:compileDebugJavaWithJavac FAILED`?
+
   Please refer to https://github.com/souvik-ghosh/react-native-create-thumbnail/issues/87#issuecomment-1421105553
+
 - App crash occurs?
+
   Please check whether permission is applied.
+
 - No response when clicking to take a photo?
+
   To use the camera function, please use a real device for debugging.
