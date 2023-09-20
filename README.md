@@ -23,7 +23,7 @@ Refer to React Naitve [official document](https://reactnative.dev/docs/environme
 
 ### Install dependences
 
-1: 在项目根目录下执行如下代码,安装项目所需依赖项:
+1: Execute the following code in the project root directory to install the dependencies required for the project:
 
 ```
 // yarn
