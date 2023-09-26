@@ -1,11 +1,12 @@
-import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import HomeScreen from './pages/home';
-import LoginScreen from './pages/login';
-import {RootStackParamList} from './interface';
-import {MergerMessageScreen} from './pages/merger_message_screen';
-import {ChatScreen} from './pages/chat';
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import HomeScreen from "./pages/home";
+import LoginScreen from "./pages/login";
+import { RootStackParamList } from "./interface";
+import { MergerMessageScreen } from "./pages/merger_message_screen";
+import { ChatScreen } from "./pages/chat";
+import { Button } from "react-native";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -16,9 +17,8 @@ const App = () => {
         <Stack.Screen
           name="Home"
           options={{
-            title: '消息',
+            title: "消息",
             headerBackVisible: false,
-            // headerBackTitleVisible: false,
           }}
           component={HomeScreen}
         />
@@ -40,7 +40,7 @@ const App = () => {
         <Stack.Screen
           name="MergerMessageScreen"
           options={{
-            title: '聊天信息',
+            title: "聊天信息",
           }}
           component={MergerMessageScreen}
         />

@@ -40,7 +40,11 @@ export const TUIMessageList = (props: TUIMessageListProps) => {
     };
     const submition = Keyboard.addListener('keyboardWillShow', callback);
     return () => {
-      Keyboard.removeSubscription(submition);
+      try {
+        Keyboard.removeSubscription(submition);
+      } catch(error) {
+        console.log(error);
+      }
     };
   }, []);
 

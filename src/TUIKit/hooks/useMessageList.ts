@@ -46,8 +46,8 @@ export const useMessageList = (conversation: V2TimConversation) => {
           .getHistoryMessageList(
             10,
             HistoryMsgGetTypeEnum.V2TIM_GET_CLOUD_OLDER_MSG,
-            userID === 'null' ? undefined : userID,
-            groupID === 'null' ? undefined : groupID,
+            userID === 'null' || userID === '' ? undefined : userID,
+            groupID === 'null' || groupID === '' ? undefined : groupID,
             undefined,
             lastMsgID,
           );

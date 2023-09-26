@@ -5973,9 +5973,9 @@ react-native-fs@^2.20.0:
     base-64 "^0.1.0"
     utf8 "^3.0.0"
 
-react-native-gesture-handler@^2.9.0:
+react-native-gesture-handler@2.9.0:
   version "2.9.0"
-  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.9.0.tgz#2f63812e523c646f25b9ad660fc6f75948e51241"
+  resolved "https://mirrors.tencent.com/npm/react-native-gesture-handler/-/react-native-gesture-handler-2.9.0.tgz#2f63812e523c646f25b9ad660fc6f75948e51241"
   integrity sha512-a0BcH3Qb1tgVqUutc6d3VuWQkI1AM3+fJx8dkxzZs9t06qA27QgURYFoklpabuWpsUTzuKRpxleykp25E8m7tg==
   dependencies:
     "@egjs/hammerjs" "^2.0.17"
@@ -6032,10 +6032,10 @@ react-native-size-matters@^0.4.0:
   resolved "https://registry.yarnpkg.com/react-native-size-matters/-/react-native-size-matters-0.4.0.tgz#01bfd0d59454318f4e0b13fe9c1eb0523d70f2e0"
   integrity sha512-8/C0htHrFWeUm9N8JegmadovUfgTWkGBkDPZ1N3YkXtDWb+98Ya2gThiKcu445r8c7YhcrBfnHz/mYsXIusaOQ==
 
-react-native-tim-js@^0.1.21:
-  version "0.1.22"
-  resolved "https://registry.yarnpkg.com/react-native-tim-js/-/react-native-tim-js-0.1.22.tgz#4cf7e8c4de95b39dd597ab485fbf269652361821"
-  integrity sha512-4NgYnj1JQHKcA+PH34Nlz0QnZBlbJRwop9c1Jymg3lERLUkfijakOaV8di+MV41ie8MbbfC0+OO81TSeJz/eUw==
+react-native-tim-js@^0.1.22:
+  version "0.1.27"
+  resolved "https://mirrors.tencent.com/npm/react-native-tim-js/-/react-native-tim-js-0.1.27.tgz#b2c1de9a2ac687727263ebf415f3a6a3edd996ce"
+  integrity sha512-bA5QmBxGMF5hX0lMnGmxHn0MHy97u6MlIoOx1MstfjpAAH3QuXlaQMmehNjwl2iTBBAdvLaaRpgeeJHiVQay6A==
 
 react-native-vector-icons@^9.2.0:
   version "9.2.0"
