@@ -4,6 +4,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../interface';
 import {TencentImSDKPlugin, LogLevelEnum} from 'react-native-tim-js';
 import {LOGIN_USER_ID, SDKAPPID, USER_SIG} from './config';
+import { TimPushPlugin } from 'react-native-tim-push';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
@@ -27,6 +28,11 @@ function LoginScreen({navigation}: Props) {
   const login = async () => {
     console.log('login pressed');
     const {code} = await TencentImSDKPlugin.v2TIMManager.login(userID, userSig);
+    // const cPush = new TimPushPlugin();
+    // cPush.init({
+    //   honor_buz_id: 0,
+    //   honor_buz_id_abroad: 0,
+    // });
     if (code === 0) {
       navigation.navigate('Home', {
         userID: userID,

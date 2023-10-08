@@ -5943,10 +5943,10 @@ react-native-codegen@^0.71.5:
     jscodeshift "^0.13.1"
     nullthrows "^1.1.1"
 
-react-native-create-thumbnail@^1.6.4:
-  version "1.6.4"
-  resolved "https://registry.yarnpkg.com/react-native-create-thumbnail/-/react-native-create-thumbnail-1.6.4.tgz#90f5b0a587de6e3738a7632fe3d9a9624ed83581"
-  integrity sha512-JWuKXswDXtqUPfuqh6rjCVMvTSSG3kUtwvSK/YdaNU0i+nZKxeqHmt/CO2+TyI/WSUFynGVmWT1xOHhCZAFsRQ==
+react-native-create-thumbnail@2.0.0-rc.2:
+  version "2.0.0-rc.2"
+  resolved "https://mirrors.tencent.com/npm/react-native-create-thumbnail/-/react-native-create-thumbnail-2.0.0-rc.2.tgz#1435fc635508102abbf50993a297ae582dcd141f"
+  integrity sha512-ctq/WyggoSqvhIcr8qGd3CDqjCDg3vJo5jH82wuFhwYphUPoVE39jq0IfzclIcpfvZCZ3KePq+5Fr09sgPGmaw==
 
 react-native-document-picker@^8.2.0:
   version "8.2.0"
@@ -6036,6 +6036,11 @@ react-native-tim-js@^0.1.22:
   version "0.1.27"
   resolved "https://mirrors.tencent.com/npm/react-native-tim-js/-/react-native-tim-js-0.1.27.tgz#b2c1de9a2ac687727263ebf415f3a6a3edd996ce"
   integrity sha512-bA5QmBxGMF5hX0lMnGmxHn0MHy97u6MlIoOx1MstfjpAAH3QuXlaQMmehNjwl2iTBBAdvLaaRpgeeJHiVQay6A==
+
+react-native-tim-push@0.2.0:
+  version "0.2.0"
+  resolved "https://mirrors.tencent.com/npm/react-native-tim-push/-/react-native-tim-push-0.2.0.tgz#dc4ba41911c21a9f95aa26e7497396ca7e85f67f"
+  integrity sha512-1wuLXPCUEwp4lydQbvGyYyayHzwsIQmW87bhvwCsuLsE/9dx3dPampVmk62GxmYsNx7055PMVRemb2KLMj1gNg==
 
 react-native-vector-icons@^9.2.0:
   version "9.2.0"
