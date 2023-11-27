@@ -1,20 +1,25 @@
-import {Icon, Image, makeStyles, Text} from '@rneui/themed';
-import React, {forwardRef, useImperativeHandle, useRef, useState} from 'react';
+import { Icon, Image, makeStyles, Text } from "@rneui/themed";
+import React, {
+  forwardRef,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import {
   NativeSyntheticEvent,
   TextInput,
   TextInputSubmitEditingEventData,
-} from 'react-native';
-import {View} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {useLoginUser} from '../../hooks/useLoginUser';
-import {setRepliedMessage, useTUIChatContext} from '../../store';
-import {MessageService} from './message_service';
-import {VoiceButton} from './tui_message_voice_button';
-import runes from 'runes';
-import {useRepliedMessage} from '../../store/TUIChat/selector';
-import {MessageUtils} from '../../utils/message';
-import FastImage from 'react-native-fast-image';
+} from "react-native";
+import { View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useLoginUser } from "../../hooks/useLoginUser";
+import { setRepliedMessage, useTUIChatContext } from "../../store";
+import { MessageService } from "./message_service";
+import { VoiceButton } from "./tui_message_voice_button";
+import runes from "runes";
+import { useRepliedMessage } from "../../store/TUIChat/selector";
+import { MessageUtils } from "../../utils/message";
+import FastImage from "react-native-fast-image";
 
 interface TUIMessageInputInterface {
   loginUserID: string;
@@ -50,12 +55,12 @@ export const TUIMessageInput = forwardRef<
     showToolBox = true,
   } = props;
   const styles = useStyles();
-  const [text, setText] = useState<string>('');
+  const [text, setText] = useState<string>("");
   const repliedMessage = useRepliedMessage();
   const [showVoiceRecord, setShowVoiceRecord] = useState(false);
   const textInputRef = useRef<TextInput | null>(null);
   const loginUserInfo = useLoginUser(props.loginUserID);
-  const {dispatch} = useTUIChatContext();
+  const { dispatch } = useTUIChatContext();
   const messageService = new MessageService(dispatch, {
     userInfo: loginUserInfo,
     convID,
@@ -72,17 +77,17 @@ export const TUIMessageInput = forwardRef<
       setText(text + newText);
     },
     deleteTextValue: () => {
-      setText(runes(text).slice(0, -1).join(''));
+      setText(runes(text).slice(0, -1).join(""));
     },
     hanldeSubmiting: () => hanldeSubmiting(),
   }));
 
   const hanldeSubmiting = (
-    event?: NativeSyntheticEvent<TextInputSubmitEditingEventData>,
+    event?: NativeSyntheticEvent<TextInputSubmitEditingEventData>
   ) => {
-    if (text && text !== '') {
+    if (text && text !== "") {
       sendTextMessage();
-      setText('');
+      setText("");
     }
     event?.preventDefault();
   };
@@ -103,31 +108,33 @@ export const TUIMessageInput = forwardRef<
     dispatch(
       setRepliedMessage({
         message: undefined,
-      }),
+      })
     );
   };
 
   const getRepliedMessage = () => {
     return `${MessageUtils.getDisplayName(
-      repliedMessage!,
+      repliedMessage!
     )}: ${MessageUtils.getAbstractMessageAsync(repliedMessage!)}`;
   };
 
   return (
     <SafeAreaView
       style={styles.safeAreaContainer}
-      edges={['right', 'bottom', 'left']}>
+      edges={["right", "bottom", "left"]}
+    >
       {repliedMessage && (
         <View style={styles.repliedMessageContainer}>
           <Text
             ellipsizeMode="tail"
             numberOfLines={3}
             h3
-            style={{color: '#8f959e'}}>
+            style={{ color: "#8f959e" }}
+          >
             {getRepliedMessage()}
           </Text>
           <Icon
-            name={'clear'}
+            name={"clear"}
             size={18}
             color="#8f959e"
             onPress={handleBackSpaceTap}
@@ -140,8 +147,8 @@ export const TUIMessageInput = forwardRef<
             ImageComponent={FastImage}
             source={
               showVoiceRecord
-                ? require('../../../assets/keyboard.png')
-                : require('../../../assets/voice.png')
+                ? require("../../../assets/keyboard.png")
+                : require("../../../assets/voice.png")
             }
             style={styles.iconSize}
             onPress={() => {
@@ -164,14 +171,14 @@ export const TUIMessageInput = forwardRef<
             <VoiceButton onSend={sendSoundMessage} />
           ) : (
             <TextInput
-              onKeyPress={({nativeEvent}) => {
-                if (nativeEvent.key === 'Backspace') {
-                  if (repliedMessage && text === '') {
+              onKeyPress={({ nativeEvent }) => {
+                if (nativeEvent.key === "Backspace") {
+                  if (repliedMessage && text === "") {
                     handleBackSpaceTap();
                   }
                 }
               }}
-              ref={input => (textInputRef.current = input)}
+              ref={(input) => (textInputRef.current = input)}
               onChangeText={handleTextChange}
               onSubmitEditing={hanldeSubmiting}
               style={styles.inputStyle}
@@ -184,9 +191,9 @@ export const TUIMessageInput = forwardRef<
           <Image
             ImageComponent={FastImage}
             source={
-              driverName === 'emoji'
-                ? require('../../../assets/keyboard.png')
-                : require('../../../assets/face.png')
+              driverName === "emoji"
+                ? require("../../../assets/keyboard.png")
+                : require("../../../assets/face.png")
             }
             // eslint-disable-next-line react-native/no-inline-styles
             style={{
@@ -204,7 +211,7 @@ export const TUIMessageInput = forwardRef<
         {showToolBox && (
           <Image
             ImageComponent={FastImage}
-            source={require('../../../assets/more.png')}
+            source={require("../../../assets/more.png")}
             style={styles.iconSize}
             onPress={props.onToolBoxTap}
           />
@@ -214,28 +221,28 @@ export const TUIMessageInput = forwardRef<
   );
 });
 
-const useStyles = makeStyles(theme => {
+const useStyles = makeStyles((theme) => {
   return {
     safeAreaContainer: {
-      backgroundColor: '#EDEDED',
+      backgroundColor: "#EDEDED",
     },
     iconSize: {
       height: 28,
       width: 28,
     },
     rowContainer: {
-      display: 'flex',
-      flexDirection: 'row',
+      display: "flex",
+      flexDirection: "row",
       paddingLeft: 15,
       paddingRight: 15,
       // height: 35,
-      backgroundColor: '#EDEDED',
-      alignItems: 'center',
+      backgroundColor: "#EDEDED",
+      alignItems: "center",
       paddingTop: 10,
       paddingBottom: 10,
     },
     inputStyle: {
-      height: 35,
+      height: 38,
       backgroundColor: theme.colors.white,
       paddingLeft: 4,
     },
@@ -248,11 +255,11 @@ const useStyles = makeStyles(theme => {
     repliedMessageContainer: {
       paddingVertical: 10,
       paddingHorizontal: 16,
-      backgroundColor: '#EDEDED',
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      backgroundColor: "#EDEDED",
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
     },
   };
 });

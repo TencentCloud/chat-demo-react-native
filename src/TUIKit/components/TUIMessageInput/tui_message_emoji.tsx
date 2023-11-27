@@ -7,6 +7,7 @@ import {
   Text,
   View,
   ViewStyle,
+  useWindowDimensions,
 } from 'react-native';
 import {styles} from './styles';
 import {emojiData} from './emoji_data';
@@ -43,11 +44,13 @@ export const TUIMessageEmoji = (props: TUIMessageEmojiProps) => {
 const EmojiPanel = React.memo((props: TUIEmojiPanelProps) => {
   const {bottom} = useSafeAreaInsets();
   const {onEmojiDelPress, onEmojiSelect, onMessageSendPress} = props;
+  const windowWidth = useWindowDimensions().width;
   const getData = () => {
+    const rowCount = Math.floor(windowWidth / 40);
     const result = emojiData.reduce<
       Array<Array<{name: string; unicode: number}>>
     >((acc, cur, i) => {
-      const index = Math.floor(i / 9); // 计算当前元素应该放在哪个子数组中
+      const index = Math.floor(i / rowCount); // 计算当前元素应该放在哪个子数组中
       if (!acc[index]) {
         acc[index] = [];
       }
@@ -77,7 +80,6 @@ const EmojiPanel = React.memo((props: TUIEmojiPanelProps) => {
               key={item.name}
               onPress={() => {
                 onEmojiSelect(displayText);
-                console.log(displayText);
               }}>
               <View style={{width: 40, height: 40}}>
                 <Text style={{fontSize: 26}}>{displayText}</Text>
