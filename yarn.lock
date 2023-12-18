@@ -5973,10 +5973,10 @@ react-native-fs@^2.20.0:
     base-64 "^0.1.0"
     utf8 "^3.0.0"
 
-react-native-gesture-handler@2.9.0:
-  version "2.9.0"
-  resolved "https://mirrors.tencent.com/npm/react-native-gesture-handler/-/react-native-gesture-handler-2.9.0.tgz#2f63812e523c646f25b9ad660fc6f75948e51241"
-  integrity sha512-a0BcH3Qb1tgVqUutc6d3VuWQkI1AM3+fJx8dkxzZs9t06qA27QgURYFoklpabuWpsUTzuKRpxleykp25E8m7tg==
+react-native-gesture-handler@^2.14.0:
+  version "2.14.0"
+  resolved "https://mirrors.tencent.com/npm/react-native-gesture-handler/-/react-native-gesture-handler-2.14.0.tgz#d6aec0d8b2e55c67557fd6107e828c0a1a248be8"
+  integrity sha512-cOmdaqbpzjWrOLUpX3hdSjsMby5wq3PIEdMq7okJeg9DmCzanysHSrktw1cXWNc/B5MAgxAn9J7Km0/4UIqKAQ==
   dependencies:
     "@egjs/hammerjs" "^2.0.17"
     hoist-non-react-statics "^3.3.0"
@@ -6032,15 +6032,15 @@ react-native-size-matters@^0.4.0:
   resolved "https://registry.yarnpkg.com/react-native-size-matters/-/react-native-size-matters-0.4.0.tgz#01bfd0d59454318f4e0b13fe9c1eb0523d70f2e0"
   integrity sha512-8/C0htHrFWeUm9N8JegmadovUfgTWkGBkDPZ1N3YkXtDWb+98Ya2gThiKcu445r8c7YhcrBfnHz/mYsXIusaOQ==
 
-react-native-tim-js@^0.1.22:
-  version "0.1.27"
-  resolved "https://mirrors.tencent.com/npm/react-native-tim-js/-/react-native-tim-js-0.1.27.tgz#b2c1de9a2ac687727263ebf415f3a6a3edd996ce"
-  integrity sha512-bA5QmBxGMF5hX0lMnGmxHn0MHy97u6MlIoOx1MstfjpAAH3QuXlaQMmehNjwl2iTBBAdvLaaRpgeeJHiVQay6A==
+react-native-tim-js@^0.1.29:
+  version "0.1.31"
+  resolved "https://mirrors.tencent.com/npm/react-native-tim-js/-/react-native-tim-js-0.1.31.tgz#7d47c4c818c2fa19edde54f6c14468374f7669db"
+  integrity sha512-a2LfJwrsoq5vsyNdoCVF7XfYOFLYkYBKWZjrdOQCmANHmNSTYPO/wyqW+EpxLkPNA3zpo2YQu3/rvsUTaUQxzA==
 
-react-native-tim-push@0.2.0:
-  version "0.2.0"
-  resolved "https://mirrors.tencent.com/npm/react-native-tim-push/-/react-native-tim-push-0.2.0.tgz#dc4ba41911c21a9f95aa26e7497396ca7e85f67f"
-  integrity sha512-1wuLXPCUEwp4lydQbvGyYyayHzwsIQmW87bhvwCsuLsE/9dx3dPampVmk62GxmYsNx7055PMVRemb2KLMj1gNg==
+react-native-tim-push@0.3.0-beta.9:
+  version "0.3.0-beta.9"
+  resolved "https://mirrors.tencent.com/npm/react-native-tim-push/-/react-native-tim-push-0.3.0-beta.9.tgz#b8b953e5c2d827ddf403a143443d6e9aaeadb322"
+  integrity sha512-vmRQ5fVwuL640yAHPa4f1BMj4kI1Wy8Q++DpdKkzSPMqKo+8ltRrAUsNusyFiedZ3eIGhaExU6MI88dB0pDSCQ==
 
 react-native-vector-icons@^9.2.0:
   version "9.2.0"

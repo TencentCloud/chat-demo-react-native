@@ -21,6 +21,7 @@ interface IMessageItemOption extends Partial<BaseElements> {
   AvatarComponent?: MessageElement;
 }
 
+
 export interface BaseElements {
   TextElement: MessageElement;
   ImageElement: MessageElement;
