@@ -28,8 +28,8 @@ export const MergerElement = (props: {
       <View style={styles.container}>
         <Text numberOfLines={1}>{mergerElem?.title}</Text>
         <View style={{marginVertical: 12}}>
-          {getAbstractList().map(item => (
-            <Text h4 style={{color: theme.colors.grey4}}>
+          {getAbstractList().map((item,index) => (
+            <Text key={index} h4 style={{color: theme.colors.grey4}}>
               {item}
             </Text>
           ))}

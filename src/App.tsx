@@ -17,8 +17,9 @@ const App = () => {
         <Stack.Screen
           name="Home"
           options={{
-            title: "消息",
-            headerBackVisible: false,
+            headerShown:false
+            // title: "消息",
+            // headerBackVisible: false,
           }}
           component={HomeScreen}
         />

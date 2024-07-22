@@ -59,6 +59,7 @@ export const ImageElement = (props: {
   const getImage = async (localPathAvailable = true) => {
     let imgPath;
     if (haveImgPath && localPathAvailable) {
+      console.log("------haveImgPath--------"+imgPath);
       imgPath = 'file:///' + imageElem.path;
       setImagePath(imgPath!);
       const isExist = await RNFS.exists(imgPath!);
@@ -70,13 +71,14 @@ export const ImageElement = (props: {
       }
       return;
     } else if (haveOriginalLocalUrl) {
-      imgPath = originalImg.localUrl;
+      imgPath = "file://"+originalImg.localUrl;
     } else if (haveSmallLocalUrl) {
-      imgPath = smallImage.localUrl;
+      imgPath = "file://"+smallImage.localUrl;
     } else {
       imgPath = smallImage?.url;
     }
     if (imgPath) {
+      console.log("------haveImgPath2--------"+imgPath);
       setImagePath(imgPath);
     }
   };
@@ -157,7 +159,7 @@ export const ImageElement = (props: {
           setIsVisible(true);
         }}>
         <Image
-          ImageComponent={FastImage}
+          // ImageComponent={FastImage}
           containerStyle={[
             styles.img,
             {

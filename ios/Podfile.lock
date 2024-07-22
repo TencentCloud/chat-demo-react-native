@@ -312,7 +312,7 @@ PODS:
     - glog
   - react-native-cameraroll (5.3.1):
     - React-Core
-  - react-native-create-thumbnail (1.6.4):
+  - react-native-create-thumbnail (2.0.0-rc.2):
     - React-Core
   - react-native-document-picker (8.2.1):
     - React-Core
@@ -324,10 +324,12 @@ PODS:
     - RCTTypeSafety
     - React-Core
     - ReactCommon/turbomodule/core
-  - react-native-tim-js (0.1.27):
+  - react-native-tim-js (0.1.33):
     - HydraAsync
     - React-Core
-    - TXIMSDK_Plus_iOS (= 7.2.4146)
+    - TXIMSDK_Plus_iOS (= 7.6.5011)
+  - react-native-tim-push (0.3.0-beta.9):
+    - React-Core
   - react-native-video (5.2.1):
     - React-Core
     - react-native-video/Video (= 5.2.1)
@@ -426,7 +428,8 @@ PODS:
     - React-Core
   - RNFS (2.20.0):
     - React-Core
-  - RNGestureHandler (2.9.0):
+  - RNGestureHandler (2.16.2):
+    - RCT-Folly (= 2021.07.22.00)
     - React-Core
   - RNKeyboardInsets (1.3.5):
     - React-Core
@@ -442,7 +445,7 @@ PODS:
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.10)
   - SocketRocket (0.6.1)
-  - TXIMSDK_Plus_iOS (7.2.4146)
+  - TXIMSDK_Plus_iOS (7.6.5011)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -497,6 +500,7 @@ DEPENDENCIES:
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-tim-js (from `../node_modules/react-native-tim-js`)
+  - react-native-tim-push (from `../node_modules/react-native-tim-push`)
   - react-native-video (from `../node_modules/react-native-video`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -596,6 +600,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-tim-js:
     :path: "../node_modules/react-native-tim-js"
+  react-native-tim-push:
+    :path: "../node_modules/react-native-tim-push"
   react-native-video:
     :path: "../node_modules/react-native-video"
   React-perflogger:
@@ -681,11 +687,12 @@ SPEC CHECKSUMS:
   React-jsinspector: d5ce2ef3eb8fd30c28389d0bc577918c70821bd6
   React-logger: 9332c3e7b4ef007a0211c0a9868253aac3e1da82
   react-native-cameraroll: f3050460fe1708378698c16686bfaa5f34099be2
-  react-native-create-thumbnail: e022bcdcba8a0b4529a50d3fa1a832ec921be39d
+  react-native-create-thumbnail: 6f45caa41b69098376c1681bf757c6113871b7b8
   react-native-document-picker: 69ca2094d8780cfc1e7e613894d15290fdc54bba
   react-native-image-picker: 3269f75c251cdcd61ab51b911dd30d6fff8c6169
   react-native-safe-area-context: 39c2d8be3328df5d437ac1700f4f3a4f75716acc
-  react-native-tim-js: b3e457cf57d62a429eaa14a1a302c0e1eaecba9e
+  react-native-tim-js: 32d80c645592f7786d028d99bd57a8ef7cd80ccb
+  react-native-tim-push: 10085bb17efa159dcc424bb11a2741bd2bfcc967
   react-native-video: c26780b224543c62d5e1b2a7244a5cd1b50e8253
   React-perflogger: 43392072a5b867a504e2b4857606f8fc5a403d7f
   React-RCTActionSheet: c7b67c125bebeda9fb19fc7b200d85cb9d6899c4
@@ -705,14 +712,14 @@ SPEC CHECKSUMS:
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
   RNFileViewer: ce7ca3ac370e18554d35d6355cffd7c30437c592
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
-  RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
+  RNGestureHandler: d678f94a8f74de70ce3d9f5d23eb0f97b686e943
   RNKeyboardInsets: b4e8f3235eca5e2ee17c92459ef350941704d62b
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
   RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
-  TXIMSDK_Plus_iOS: 560464285b93add271d5fd7a2a26434293821c11
+  TXIMSDK_Plus_iOS: b665f09489e7d1a35c2dd95a495544d0c2a84f37
   Yoga: ba09b6b11e6139e3df8229238aa794205ca6a02a
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 

@@ -51,6 +51,7 @@ export const useMessageList = (conversation: V2TimConversation) => {
             undefined,
             lastMsgID,
           );
+        console.log("getHistoryMessageList "+ response.code);
         if (response.code === 0) {
           const responseMessageList = response.data ?? [];
           if (responseMessageList.length === 0) {

@@ -6,7 +6,6 @@ import {
   FlatList,
   ListRenderItem,
   StyleSheet,
-  TouchableOpacity,
   Modal,
   Pressable,
 } from "react-native";
@@ -16,11 +15,14 @@ import {
   V2TimMessage,
   TencentImSDKPlugin,
   MessageElemType,
+  V2TimFriendInfo,
 } from "react-native-tim-js";
 import { RootStackParamList } from "../interface";
 import { getCurrentTime } from "../TUIKit";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import { Dialog, Input, ScreenWidth, Button } from "@rneui/base";
+import { Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
+import { Dialog, Input, ScreenWidth, Button, ListItem, Avatar, Icon, Tab, TabView, ScreenHeight } from "@rneui/base";
+import { TUIConversationList } from "../TUIKit/components/TUIConversation";
+import { TUIFriendList } from "../TUIKit/components/TUIFriend/tui_friend_list";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 
@@ -41,6 +43,7 @@ function HomeScreen({ route, navigation }: Props) {
     V2TimConversation[]
   >([]);
   const [convID, setConvID] = React.useState<string>("");
+  const [index, setIndex] = React.useState(0);
   React.useEffect(() => {
     getConversationList();
     addConversationListChange();
@@ -84,27 +87,31 @@ function HomeScreen({ route, navigation }: Props) {
       .getConversationManager()
       .getConversationList(15, "0");
     if (code === 0) {
-      setConversationList((prevState) => [
-        ...prevState,
-        ...data?.conversationList!,
-      ]);
+      
+      setConversationList((prevState) => {
+        const newConversationList = [...prevState, ...data?.conversationList!];
+      const uniqueConversationList = Array.from(new Set(newConversationList.map(conversation => conversation.conversationID)))
+        .map(id => newConversationList.find(conversation => conversation.conversationID === id))
+        .filter(conversation => conversation !== undefined) as V2TimConversation[];
+      return uniqueConversationList;
+      });
     }
   };
 
-  React.useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => {
-        return (
-          <Button
-            title="发起会话"
-            onPress={createConversation}
-            type="clear"
-            titleStyle={{ color: "rgba(78, 116, 289, 1)" }}
-          />
-        );
-      },
-    });
-  }, [navigation]);
+  // React.useEffect(() => {
+  //   navigation.setOptions({
+  //     headerRight: () => {
+  //       return (
+  //         <Button
+  //           title="发起会话"
+  //           onPress={createConversation}
+  //           type="clear"
+  //           titleStyle={{ color: "rgba(78, 116, 289, 1)" }}
+  //         />
+  //       );
+  //     },
+  //   });
+  // }, [navigation]);
 
   const createConversation = async () => {
     setVisible(true);
@@ -170,7 +177,9 @@ function HomeScreen({ route, navigation }: Props) {
   });
 
   const sortConversationList = () => {
+    console.log("conversationList length "+ conversationList.length);
     const tmpConv = [...conversationList];
+    console.log("tmpconv length "+ tmpConv.length);
     tmpConv.sort((a, b) => {
       if (a.isPinned && !b.isPinned) {
         return -1;
@@ -183,24 +192,22 @@ function HomeScreen({ route, navigation }: Props) {
     return tmpConv;
   };
 
+  const deleteConversation = (convID:string) => {
+    TencentImSDKPlugin.v2TIMManager
+      .getConversationManager().deleteConversation(convID);
+  }
   const renderConversationItem: ListRenderItem<V2TimConversation> = ({
     item,
   }) => {
+    
     const { showName, faceUrl, lastMessage, conversationID, isPinned } = item;
     const haveFaceUrl = !!faceUrl && faceUrl !== "";
-
     return (
-      <TouchableOpacity
-        activeOpacity={0.8}
-        onLongPress={(event) => {
-          const absoluteY = event.nativeEvent.pageY;
-          setPositionY(absoluteY);
-          setConversationID(conversationID);
-          setPinned(isPinned ?? false);
-          setOpen(true);
-        }}
-        onPress={() => {
-          const messageList = cachedMessageList.get(item.conversationID) ?? [];
+      <ListItem.Swipeable
+      bottomDivider
+      onPress={()=>{
+        console.log("on pressed!!!!!")
+        const messageList = cachedMessageList.get(item.conversationID) ?? [];
           navigation.navigate("Chat", {
             conversation: item,
             userID: userID,
@@ -211,145 +218,131 @@ function HomeScreen({ route, navigation }: Props) {
               );
             },
           });
-        }}
-      >
-        <View
-          style={{
-            ...styles.conversationItem,
-            backgroundColor: isPinned ? "#EDEDED" : "white",
-          }}
-        >
-          <FastImage
+      }}
+      containerStyle={{
+        marginHorizontal: -6,
+        backgroundColor: isPinned ? "#EDEDED" : "white",
+      }}
+      rightWidth={isPinned?ScreenWidth/3:ScreenWidth / 4}
+      rightContent={(reset) => (
+        <View style={{ flexDirection: 'row',width:"100%" }}>
+          <Button
+          title={isPinned? "取消置顶":"置顶"}
+          onPress={() => {pinConversation(conversationID,!isPinned)}}
+          buttonStyle={{ minHeight: '100%', backgroundColor: 'blue' }}
+        />
+        <Button
+          title="删除"
+          onPress={() => reset()}
+          buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
+        />
+        </View>
+        
+      )}
+    >
+      <FastImage
             style={{ width: 48, height: 48, borderRadius: 5 }}
             source={{
               uri: haveFaceUrl ? faceUrl : defaultFaceUrl,
             }}
             resizeMode={FastImage.resizeMode.contain}
           />
-          <View style={styles.conversationDetail}>
-            <View style={styles.showNameContainer}>
-              <Text style={styles.showNameText}>{showName}</Text>
-              {lastMessage?.timestamp && (
-                <Text style={styles.lastMsgtimeText}>
-                  {getCurrentTime((lastMessage?.timestamp ?? 0) * 1000)}
-                </Text>
-              )}
-            </View>
-            <Text
-              numberOfLines={1}
-              lineBreakMode="middle"
-              style={styles.lastMessageText}
-            >
-              {lastMessage ? getLastMessageString(lastMessage) : " "}
-            </Text>
-          </View>
-        </View>
-      </TouchableOpacity>
+    <ListItem.Content>
+      <ListItem.Title style={styles.showNameText}>{showName}</ListItem.Title>
+      
+      <ListItem.Subtitle style={styles.lastMessageText} ellipsizeMode={"tail"} numberOfLines={1} >{lastMessage ? getLastMessageString(lastMessage) : " "}</ListItem.Subtitle>
+    </ListItem.Content>
+        {lastMessage?.timestamp &&( <ListItem.Content right>
+          <ListItem.Title right style={styles.lastMsgtimeText}>
+            {getCurrentTime((lastMessage?.timestamp ?? 0) * 1000)}
+          </ListItem.Title>
+        </ListItem.Content>)}
+    </ListItem.Swipeable>
+          
     );
   };
 
-  return (
-    <View style={styles.fill}>
-      <FlatList
-        style={{ flex: 1, width: "100%" }}
-        data={sortConversationList()}
-        renderItem={renderConversationItem}
+  const onConversationTap = (conversation:V2TimConversation) => {
+      const messageList = cachedMessageList.get(conversation.conversationID) ?? [];
+            navigation.navigate("Chat", {
+              conversation: conversation,
+              userID: userID,
+              initialMessageList: messageList,
+              unMount: (message: V2TimMessage[]) => {
+                setCachedMessageList((prev) =>
+                  prev?.set(conversation.conversationID!, message)
+                );
+              },
+            });
+  }
+
+  const onFriendTap = (friend:V2TimFriendInfo) => {
+    const messageList = cachedMessageList.get("c2c_"+friend.userID) ?? [];
+            navigation.navigate("Chat", {
+              conversation: {
+                conversationID: "c2c_"+friend.userID,
+                showName: friend.friendRemark!=""?friend.friendRemark:friend.userID,
+                userID: friend.userID,
+                groupID: '',
+                type: 1,
+              },
+              userID: friend.userID,
+              initialMessageList: messageList,
+              unMount: (message: V2TimMessage[]) => {
+                setCachedMessageList((prev) =>
+                  prev?.set("c2c_"+friend.userID!, message)
+                );
+              },
+            });
+  }
+
+  return (<View style={{height:ScreenHeight}}>
+    <TabView value={index} onChange={setIndex} animationType="spring" >
+      <TabView.Item style={{width: '100%' }}>
+          
+          <TUIConversationList userID={userID} onConversationTap={onConversationTap}></TUIConversationList>
+      </TabView.Item>
+
+      <TabView.Item style={{ width: '100%' }}>
+        <TUIFriendList onFriendTap={onFriendTap}></TUIFriendList>
+      </TabView.Item>
+      
+      <TabView.Item style={{ backgroundColor: 'green', width: '100%' }}>
+        <Text>Cart</Text>
+      </TabView.Item>
+    </TabView>
+    <Tab
+      value={index}
+      onChange={(e) => setIndex(e)}
+      indicatorStyle={{
+        backgroundColor: 'blue',
+        height: 4,
+      }}
+    >
+      <Tab.Item
+        title="会话"
+        titleStyle={{ fontSize: 12,color:'black' }}
+        // containerStyle={(active) => ({
+        //   backgroundColor: active ? "#809AB3" : undefined,
+        // })}
       />
-      {open && (
-        <Modal
-          visible={open}
-          transparent
-          onRequestClose={() => setOpen(false)}
-          animationType="fade"
-        >
-          <GestureDetector gesture={closeTooltip}>
-            <View
-              style={{
-                flex: 1,
-                margin: 0,
-                backgroundColor: "transparent",
-              }}
-            >
-              <View
-                style={{
-                  marginLeft: ScreenWidth - 100,
-                  marginTop: positionY,
-                  marginRight: 10,
-                  backgroundColor: "white",
-                  shadowColor: "#ccc",
-                  shadowOffset: { width: 1, height: 2 },
-                  shadowOpacity: 0.8,
-                }}
-              >
-                <View
-                  style={{
-                    shadowColor: "#ccc",
-                    shadowOffset: { width: 1, height: 2 },
-                    shadowOpacity: 0.8,
-                    padding: 10,
-                    borderRadius: 8,
-                  }}
-                >
-                  <Pressable
-                    onPress={() => {
-                      pinConversation(
-                        handledConversationID,
-                        !conversationIsPinned
-                      );
-                    }}
-                  >
-                    <Text style={{ fontSize: 14 }}>
-                      {conversationIsPinned ? "取消置顶" : "置顶"}
-                    </Text>
-                  </Pressable>
-                </View>
-              </View>
-            </View>
-          </GestureDetector>
-        </Modal>
-      )}
-      <Dialog
-        isVisible={isVisible}
-        onBackdropPress={() => {
-          setVisible(false);
-          setConvID("");
-        }}
-        overlayStyle={{
-          backgroundColor: "white",
-        }}
-      >
-        <View
-          style={{
-            backgroundColor: "white",
-          }}
-        >
-          <Input placeholder="输入用户ID" onChangeText={(v) => setConvID(v)} />
-          <Button
-            title="确定"
-            onPress={() => {
-              navigation.navigate("Chat", {
-                conversation: {
-                  conversationID: `c2c_${convID}`,
-                  showName: convID,
-                  userID: convID,
-                  groupID: '',
-                  type: 1,
-                },
-                userID: userID,
-                initialMessageList: [],
-                unMount: (message: V2TimMessage[]) => {},
-              });
-              setVisible(false);
-            }}
-            buttonStyle={{
-              backgroundColor: "rgba(78, 116, 289, 1)",
-              borderRadius: 3,
-            }}
-          />
-        </View>
-      </Dialog>
-    </View>
-  );
+      <Tab.Item
+        title="好友"
+        titleStyle={{ fontSize: 12,color:'black' }}
+        // containerStyle={(active) => ({
+        //   backgroundColor: active ? "#809AB3" : undefined,
+        // })}
+      />
+      <Tab.Item
+        title="设置"
+        titleStyle={{ fontSize: 12,color:'black' }}
+        // containerStyle={(active) => ({
+        //   backgroundColor: active ? "#809AB3" : undefined,
+        // })}
+      />
+    </Tab>
+  </View>);
+
 }
 
 const styles = StyleSheet.create({

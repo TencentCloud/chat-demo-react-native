@@ -89,6 +89,7 @@ const TUINormalMessage = withMessageMemo((props: TUINormalMessage) => {
       return <TextElement message={message} />;
     }
     if (elementType === MessageElemType.V2TIM_ELEM_TYPE_IMAGE) {
+      console.log("=====imageElement======" + JSON.stringify(message));
       return <ImageElement message={message} />;
     }
     if (elementType === MessageElemType.V2TIM_ELEM_TYPE_SOUND) {

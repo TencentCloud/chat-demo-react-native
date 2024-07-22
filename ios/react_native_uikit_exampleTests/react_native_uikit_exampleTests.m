@@ -6,9 +6,12 @@
 
 #define TIMEOUT_SECONDS 600
 #define TEXT_TO_LOOK_FOR @"Welcome to React"
-
+/*
+ This class provides unit tests for the React Native UIKit Example components.
+ It ensures that the UI components behave as expected in various scenarios.
+ */
 @interface react_native_uikit_exampleTests : XCTestCase
-
+// Add any properties or methods specific to this test class here.
 @end
 
 @implementation react_native_uikit_exampleTests

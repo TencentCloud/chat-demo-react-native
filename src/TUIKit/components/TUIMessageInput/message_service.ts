@@ -1,4 +1,4 @@
-import type {Dispatch} from 'react';
+import type { Dispatch } from 'react';
 import {
   MessageElemType,
   MessagePriorityEnum,
@@ -57,7 +57,7 @@ export class MessageService {
   }
 
   async sendTextMessage(text: string) {
-    const {code, data} = await this.messageManager.createTextMessage(text);
+    const { code, data } = await this.messageManager.createTextMessage(text);
     if (code === 0) {
       this.sendMessage(data);
     }
@@ -94,7 +94,7 @@ export class MessageService {
   }
 
   async sendRepliedMessage(text: string, repliedMessage: V2TimMessage) {
-    const {code, data} = await this.messageManager.createTextMessage(text);
+    const { code, data } = await this.messageManager.createTextMessage(text);
     if (code === 0) {
       const hasNickName =
         repliedMessage?.nickName && repliedMessage?.nickName !== '';
@@ -149,7 +149,7 @@ export class MessageService {
       const receiver = this.convType === 1 ? this.convID : '';
       const groupID = this.convType === 2 ? this.convID : '';
       if (repliedMessage) {
-        const {code, data} = await this.messageManager.sendReplyMessage({
+        const { code, data } = await this.messageManager.sendReplyMessage({
           id: createdMsgID!,
           receiver,
           groupID,
@@ -164,7 +164,7 @@ export class MessageService {
           this.dispatch!(updateMessateItem(messageInfoWithSender));
         }
       } else {
-        const {code, data} = await this.messageManager.sendMessage({
+        const { code, data } = await this.messageManager.sendMessage({
           id: createdMsgID!,
           receiver,
           groupID,
@@ -181,7 +181,7 @@ export class MessageService {
   }
 
   async sendImageMessage(path: string, width: number, height: number) {
-    const {code, data} = await this.messageManager.createImageMessage(path);
+    const { code, data } = await this.messageManager.createImageMessage(path);
     if (code === 0) {
       this.sendMessage(data, width, height);
     }
@@ -195,7 +195,7 @@ export class MessageService {
     snapshotWidth: number,
     snapshotHeight: number,
   ) {
-    const {code, data} = await this.messageManager.createVideoMessage(
+    const { code, data } = await this.messageManager.createVideoMessage(
       path,
       type,
       duration,
@@ -209,7 +209,7 @@ export class MessageService {
   }
 
   async sendFileMessage(filePath: string, fileName: string) {
-    const {code, data} = await this.messageManager.createFileMessage(
+    const { code, data } = await this.messageManager.createFileMessage(
       filePath,
       fileName,
     );
@@ -219,10 +219,21 @@ export class MessageService {
   }
 
   async sendSoundMessage(soundPath: string, soundSeconds: number) {
-    const {code, data} = await this.messageManager.createSoundMessage(
+    const { code, data } = await this.messageManager.createSoundMessage(
       soundPath,
       soundSeconds,
     );
+    if (code === 0) {
+      this.sendMessage(data);
+    }
+  }
+
+  async sendCustomMessage(customData: { data: string, desc?: string, extension?: string }) {
+    const { code, data } = await this.messageManager.createCustomMessage({
+      data: customData.data,
+      desc: customData?.desc,
+      extension: customData?.extension,
+    });
     if (code === 0) {
       this.sendMessage(data);
     }

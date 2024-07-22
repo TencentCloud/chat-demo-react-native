@@ -1,6 +1,7 @@
 import type { V2TimMessage } from 'react-native-tim-js';
 import { HISTORY_MESSAGE_DISTANCE } from '../../constants';
 import { useTUIChatContext } from './context';
+import { isCustomerServiceMessage, isMessageInvisible } from '../../customer-service-plugin/utils';
 
 export const useMessageList = () => {
   const {
@@ -9,14 +10,24 @@ export const useMessageList = () => {
   const lastMsgId = messageList[messageList.length - 1]?.msgID;
 
   const listWithTimestamp: V2TimMessage[] = [];
-  [...messageList].reverse().map((item) => {
+  [...messageList].filter((item) => {
+    try {
+      if (isCustomerServiceMessage(item) && isMessageInvisible(item)) {
+        return false
+      }
+    } catch (e) {
+      console.log(e);
+      return true
+    }
+    return true
+  }).reverse().map((item) => {
     if (
       listWithTimestamp.length === 0 ||
       (listWithTimestamp[listWithTimestamp.length - 1] &&
         listWithTimestamp[listWithTimestamp.length - 1]!.timestamp &&
         item.timestamp! -
-          listWithTimestamp[listWithTimestamp.length - 1]!.timestamp! >
-          HISTORY_MESSAGE_DISTANCE)
+        listWithTimestamp[listWithTimestamp.length - 1]!.timestamp! >
+        HISTORY_MESSAGE_DISTANCE)
     ) {
       listWithTimestamp.push({
         userID: '',

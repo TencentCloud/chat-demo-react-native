@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Keyboard } from "react-native";
 import { Pressable, StyleSheet, View } from "react-native";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
 import {
   MessageElemType,
   TencentImSDKPlugin,
@@ -173,14 +173,17 @@ export const MessageToolTip = <
 
   return (
     <Fragment>
-      <GestureDetector gesture={compose}>
-        <View
-          ref={(ref) => (viewRef.current = ref)}
-          onLayout={calculatePosition}
-        >
-          {props.children}
-        </View>
-      </GestureDetector>
+      <GestureHandlerRootView>
+        <GestureDetector gesture={compose}>
+          <View
+            ref={(ref) => (viewRef.current = ref)}
+            onLayout={calculatePosition}
+          >
+            {props.children}
+          </View>
+        </GestureDetector>
+      </GestureHandlerRootView>
+      
 
       {open && (
         <Modal

@@ -19,8 +19,8 @@
 │   │   │   ├── keyboardDriver.ts
 │   │   │   └── viewDriver.ts
 │   │   ├── index.ts
-│   │   └── tui_chat.tsx --- 聊天根组件
-│   ├── TUIChatHeader
+│   │   └── tui_chat.tsx --- 聊天根组件,包含历史消息页面&发送消息的所有功能，可以从conversation直接跳转到TUIChat
+│   ├── TUIChatHeader --- 聊天页面中的header，显示conversation id和返回按钮
 │   │   ├── index.ts
 │   │   └── tui_chat_header.tsx
 │   ├── TUIMessage
@@ -46,7 +46,7 @@
 │   │   │   ├── time_element.tsx ---时间消息组件
 │   │   │   └── video_element.tsx ---视频消息组件
 │   │   └── tui_message.tsx --- 消息组件、处理不同类型的消息渲染逻辑
-│   ├── TUIMessageInput
+│   ├── TUIMessageInput --- 消息输入，包含文字，表情包等
 │   │   ├── emoji_data.ts ---unicode 表情数据
 │   │   ├── message_service.ts ---消息服务，发送各类型消息接口
 │   │   ├── styles.ts
@@ -78,7 +78,7 @@
 │   │   ├── reducer.ts
 │   │   └── selector.ts
 │   └── index.ts
-├── theme
+├── theme --- 主题，分为黑白两种
 │   ├── index.ts
 │   └── tui_chat_theme.ts
 ├── type
