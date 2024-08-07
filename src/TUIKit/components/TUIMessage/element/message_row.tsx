@@ -1,21 +1,63 @@
+import { CheckBox } from '@rneui/base';
 import type {PropsWithChildren} from 'react';
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Image, StyleSheet, View} from 'react-native';
 
 interface MessageRowProps {
   isSelf: boolean;
+  isSelected:boolean;
+  isSelectMode?:boolean;
+  messageSelctedCallback?:(isAdd:boolean)=>void;
 }
 export const MessageRow = <T extends MessageRowProps>(
   props: PropsWithChildren<T>,
 ) => {
-  const {isSelf, children} = props;
+  const {isSelf,isSelected,isSelectMode, children} = props;
+  const [isChecked,setIsChecked] = React.useState(false);
+  React.useEffect(()=>{
+    setIsChecked(false);
+  },[props.isSelectMode]);
   return (
-    <View style={isSelf ? styles.messageRowForSelf : styles.messageRow}>
-      <View
-        style={isSelf ? styles.messageElementForSelf : styles.messageElement}>
-        {children}
+    <View>
+          {isSelectMode &&  <View style={{flexDirection:'row'}}>
+          <View style={{alignSelf:'flex-start'}}>
+            <CheckBox checked={isChecked}
+              checkedIcon={
+                <Image style={{ width:15,height:15 }} source={require('../../../../assets/check-box.png')}/>
+              }
+              uncheckedIcon={
+                <Image style={{ width:15,height:15 }} source={require('../../../../assets/blank-check-box.png')}/>
+              }
+              onPress={()=>{
+                // console.log("onpress checkbox");
+                if(props.messageSelctedCallback){
+                  props.messageSelctedCallback(!isChecked)
+                }
+                setIsChecked(!isChecked);
+                
+                
+              }}
+          />
+          </View>
+          
+          <View style={isSelf ? styles.messageRowForSelf : styles.messageRow}>
+            <View
+              style={isSelf ? styles.messageElementForSelf : styles.messageElement}>
+              {children}
+            </View>
+          </View>
+        </View>
+      }
+      {
+        !isSelectMode && <View style={isSelf ? styles.messageRowForSelf : styles.messageRow}>
+        <View
+          style={isSelf ? styles.messageElementForSelf : styles.messageElement}>
+          {children}
+        </View>
       </View>
+      }
     </View>
+    
   );
 };
 
@@ -29,6 +71,7 @@ const styles = StyleSheet.create({
   },
   messageRowForSelf: {
     display: 'flex',
+    flex:1,
     flexDirection: 'row',
     justifyContent: 'flex-end',
     marginBottom: 20,

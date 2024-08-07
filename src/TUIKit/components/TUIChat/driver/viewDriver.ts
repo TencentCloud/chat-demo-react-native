@@ -16,7 +16,6 @@ export class ViewDriver implements Driver {
   messageListContainerHeight = 0;
 
   show = (state: DriverState) => {
-    console.log('show');
     const {bottom, driver, setDriver, setTranslateY, setTranslateMLY} = state;
 
     if (driver && driver !== this) {

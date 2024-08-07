@@ -22,6 +22,7 @@ import { Gesture, GestureDetector, GestureHandlerRootView } from "react-native-g
 import { Dialog, Input, ScreenWidth, Button, Header } from "@rneui/base";
 import { TUIConversationItem } from "./tui_conversation_item";
 import { useTheme } from "@rneui/themed";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 interface TUIConversationListProps {
     userID:string;
@@ -62,9 +63,18 @@ export const TUIConversationList = (props:TUIConversationListProps) => {
     });
   };
 
+  const handleConversationDeleted = async (conversationIDList:String[]) => {
+    setConversationList((prevState) => {
+      const filteredA = prevState.filter((item) => !conversationIDList.includes(item.conversationID));
+      return filteredA;
+    })
+  }
+
   const conversationListener = {
     onConversationChanged: handleConversationChanged,
     onNewConversation: handleNewConversation,
+    onConversationDeleted: handleConversationDeleted,
+    // onConversationDeleted: handleConversationDeleted,
   };
 
   const addConversationListChange = async () => {
@@ -113,6 +123,7 @@ export const TUIConversationList = (props:TUIConversationListProps) => {
     }
 
     return (
+      <SafeAreaProvider>
         <View style={styles.fill}>
         <Header
         containerStyle={{
@@ -130,6 +141,7 @@ export const TUIConversationList = (props:TUIConversationListProps) => {
             renderItem={renderConversationItem}
           />
         </View>
+        </SafeAreaProvider>
       );
 }
 const styles = StyleSheet.create({

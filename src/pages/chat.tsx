@@ -4,6 +4,7 @@ import {View} from 'react-native';
 import type {V2TimMessage} from 'react-native-tim-js';
 import {RootStackParamList} from '../interface';
 import {TUIChat} from '../TUIKit';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Chat'>;
 
@@ -27,6 +28,7 @@ export function ChatScreen({route, navigation}: Props) {
   };
 
   return (
+    <SafeAreaProvider>
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <TUIChat
         conversation={conversation}
@@ -37,5 +39,6 @@ export function ChatScreen({route, navigation}: Props) {
         onMergeMessageTap={handleMergeMessageTap}
       />
     </View>
+    </SafeAreaProvider>
   );
 }

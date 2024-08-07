@@ -6,7 +6,8 @@ export const withMessageMemo = (component: any) => {
       prev.message.msgID === next.message.msgID &&
       prev.message.timestamp === next.message.timestamp &&
       prev.message.seq === next.message.seq &&
-      prev.message.id === next.message.id
+      prev.message.id === next.message.id &&
+      prev.isSelectMode === next.isSelectMode
     );
   });
 };

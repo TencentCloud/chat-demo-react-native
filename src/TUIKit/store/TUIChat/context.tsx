@@ -6,13 +6,14 @@ import React, {
   useMemo,
   useReducer,
 } from 'react';
-import type { V2TimMessage } from 'react-native-tim-js/lib/typescript/src/interface';
+import type { V2TimMessage, V2TimMessageReceipt } from 'react-native-tim-js/lib/typescript/src/interface';
 import type { TUIChatAction } from './actions';
 import { initialState, TUIChatReducer, TUIChatReducerType } from './reducer';
 
 export interface TUIChatState {
   messageList: V2TimMessage[];
   repliedMessage?: V2TimMessage;
+  messageReadReceipt?:Map<string,V2TimMessageReceipt>;
 }
 
 interface IContext {

@@ -12,6 +12,7 @@ import {
   setMessage,
   updateMessage,
   updateMessageProgress,
+  updateMessageReceipt,
   useTUIChatContext,
 } from '../store';
 
@@ -20,6 +21,20 @@ export const useMessageList = (conversation: V2TimConversation) => {
   const [loading] = useState(false);
   //   const [haveMore, setHaveMore] = useState(true);
   const {dispatch} = useTUIChatContext();
+  const getMessageReceipt = async (msgIDs:string[])=>{
+    const res = await TencentImSDKPlugin.v2TIMManager.getMessageManager().getMessageReadReceipts(msgIDs);
+    if(res.code == 0){
+      dispatch(updateMessageReceipt({receipt: res.data ?? []}))
+    }
+  }
+  const sendMessageReceipt = async (msgIDs:string[]) => {
+    const res = await TencentImSDKPlugin.v2TIMManager.getMessageManager().sendMessageReadReceipts(msgIDs);
+    if(res.code == 0){
+      console.log("sendMessageReceipt");
+    }
+  }
+
+  
 
   const loadMore = useCallback(
     async ({
@@ -44,23 +59,33 @@ export const useMessageList = (conversation: V2TimConversation) => {
         const response = await TencentImSDKPlugin.v2TIMManager
           .getMessageManager()
           .getHistoryMessageList(
-            10,
+            20,
             HistoryMsgGetTypeEnum.V2TIM_GET_CLOUD_OLDER_MSG,
             userID === 'null' || userID === '' ? undefined : userID,
             groupID === 'null' || groupID === '' ? undefined : groupID,
             undefined,
             lastMsgID,
           );
-        console.log("getHistoryMessageList "+ response.code);
         if (response.code === 0) {
           const responseMessageList = response.data ?? [];
           if (responseMessageList.length === 0) {
             return;
           }
+          
           if (lastMsgID) {
             dispatch(updateMessage(responseMessageList));
           } else {
             dispatch(setMessage(responseMessageList));
+          }
+          if(groupID !== 'null' && groupID !== ''){
+            let msgid:string[] = [];
+            responseMessageList.forEach((item)=>{
+              if(item.msgID != undefined && item.msgID != '' && item.needReadReceipt == true){
+                msgid.push(item.msgID);
+              }
+            })
+            await getMessageReceipt(msgid);
+            await sendMessageReceipt(msgid);
           }
         }
       } catch (error) {
@@ -80,6 +105,7 @@ export const useMessageList = (conversation: V2TimConversation) => {
     });
     const adVancedMessageListener: V2TimAdvancedMsgListener = {
       onRecvNewMessage(message) {
+        console.log("onrecvnewMessage")
         const convID = message?.userID ?? message.groupID;
         if (convID === userID || convID === groupID) {
           dispatch(addMessageItem(message));
@@ -130,6 +156,15 @@ export const useMessageList = (conversation: V2TimConversation) => {
             msgID,
           }),
         );
+      },
+      onRecvMessageReadReceipts(messageReceipt){
+        dispatch(updateMessageReceipt({receipt:messageReceipt}));
+      },
+      onRecvC2CReadReceipt(receiptList) {
+          
+      },
+      onRecvMessageModified(message) {
+          console.log("=======message modified");
       },
     };
     TencentImSDKPlugin.v2TIMManager

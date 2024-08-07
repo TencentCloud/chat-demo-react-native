@@ -54,3 +54,10 @@ export const useRepliedMessage = () => {
 
   return repliedMessage;
 };
+
+export const useMessageReceipt = () => {
+  const {
+    state:{messageReadReceipt},
+  } = useTUIChatContext();
+  return {messageReadReceipt};
+}

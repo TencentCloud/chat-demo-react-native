@@ -59,6 +59,14 @@ export class MessageService {
   async sendTextMessage(text: string) {
     const { code, data } = await this.messageManager.createTextMessage(text);
     if (code === 0) {
+
+      this.sendMessage(data);
+    }
+  }
+
+  async sendTextAtMessage(text:string,atUserList:string[]){
+    const {code,data} = await this.messageManager.createTextAtMessage(text,atUserList);
+    if(code === 0){
       this.sendMessage(data);
     }
   }
@@ -168,6 +176,7 @@ export class MessageService {
           id: createdMsgID!,
           receiver,
           groupID,
+          // needReadReceipt:true,
         });
         console.log('send message response');
         if (code === 0 && data) {

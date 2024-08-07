@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-shadow */
-import { makeStyles, Text } from "@rneui/themed";
-import React from "react";
-import { View } from "react-native";
+import { CheckBox, makeStyles, Text } from "@rneui/themed";
+import React, { useState } from "react";
+import { Image, View } from "react-native";
 import { MessageElemType, V2TimMessage } from "react-native-tim-js";
 import { withMessageMemo } from "../../hooks/withMessageMemo";
 import { DISPLAY_CENTER_MESSAGE } from "../../constants";
@@ -11,7 +11,7 @@ import { MessageUtils } from "../../utils/message";
 import type { BaseElements, MessageElement } from "../../interface";
 import { MessageBubble } from "./element";
 
-type ElementsWithMessage = BaseElements & { message: V2TimMessage };
+type ElementsWithMessage = BaseElements & { message: V2TimMessage,multiSelectCallback?:()=>void,isSelectMode?:boolean,messageSelctedCallback?:(msgID:string,isAdd:boolean)=>void   };
 
 type TUICenterMessageProps = {
   message: V2TimMessage;
@@ -19,7 +19,7 @@ type TUICenterMessageProps = {
   GroupTipsElement: MessageElement;
 };
 
-type TUINormalMessage = WithElementProps & { message: V2TimMessage };
+type TUINormalMessage = WithElementProps & { message: V2TimMessage,multiSelectCallback?:()=>void,isSelectMode?:boolean,messageSelctedCallback?:(msgID:string,isAdd:boolean)=>void   };
 
 interface WithElementProps extends BaseElements {
   showAvatar?: boolean;
@@ -27,16 +27,15 @@ interface WithElementProps extends BaseElements {
 }
 
 export const withElement = (props: WithElementProps) => {
-  return (prop: { message: V2TimMessage }) => {
-    const { message } = prop;
-
-    return <TUIMessage message={message} {...props} />;
+  return (prop: { message: V2TimMessage,multiSelectCallback?:()=>void,isSelectMode?:boolean,messageSelctedCallback?:(msgID:string,isAdd:boolean)=>void  }) => {
+    const { message,multiSelectCallback,isSelectMode,messageSelctedCallback } = prop;
+    
+    return <TUIMessage message={message} multiSelectCallback={multiSelectCallback} isSelectMode={isSelectMode} messageSelctedCallback={messageSelctedCallback} {...props} />;
   };
 };
 
 const TUIMessage = (props: ElementsWithMessage) => {
   const { TimeElement, RevokeElement, message, GroupTipsElement } = props;
-
   const elementType = message.elemType;
   const isCenterMessage = DISPLAY_CENTER_MESSAGE.includes(elementType ?? 0);
   const isRevokeMessage = message.status === 6;
@@ -76,10 +75,12 @@ const TUINormalMessage = withMessageMemo((props: TUINormalMessage) => {
     MessageAvatar,
     showAvatar = true,
     showNickName = true,
+    multiSelectCallback,
+    isSelectMode,
+    messageSelctedCallback,
   } = props;
   const isSelf = message.isSelf ?? false;
   const { nickName } = message;
-
   const NormalElement = ({ message }: { message: V2TimMessage }) => {
     const elementType = message.elemType ?? 0;
     if (elementType === MessageElemType.V2TIM_ELEM_TYPE_TEXT) {
@@ -119,20 +120,34 @@ const TUINormalMessage = withMessageMemo((props: TUINormalMessage) => {
     return <Text>["未知消息"]</Text>;
   };
 
+  const [thisSelected, setSelected] = useState(false);
+  const [selectMode,  setSelectMode] = useState(isSelectMode);
+  const startSelected = () => {
+    setSelected(true);
+    // setSelectMode(true);
+  }
+
+  const onMessageSelectCallback = (isAdd:boolean) => {
+    if(messageSelctedCallback){
+      console.log(`msgID ${message.msgID!} isAdd ${isAdd}`);
+      messageSelctedCallback(message.msgID!, isAdd);
+    }
+  }
   return (
-    <MessageRow isSelf={isSelf}>
-      {showAvatar && <MessageAvatar message={message} />}
-      <MessageColunmn isSelf={isSelf}>
-        {showNickName && (
-          <Text h4 style={styles.text}>
-            {nickName}
-          </Text>
-        )}
-        <MessageBubble message={message}>
-          <NormalElement message={message} />
-        </MessageBubble>
-      </MessageColunmn>
-    </MessageRow>
+        <MessageRow isSelf={isSelf} isSelected={thisSelected} isSelectMode={isSelectMode} messageSelctedCallback={onMessageSelectCallback}>
+        {showAvatar && <MessageAvatar message={message} />}
+        <MessageColunmn isSelf={isSelf}>
+          {showNickName && (
+            <Text h4 style={styles.text}>
+              {nickName}
+            </Text>
+          )}
+          <MessageBubble message={message} multiSelectCallback={multiSelectCallback} startSelect={startSelected}>
+            <NormalElement message={message} />
+          </MessageBubble>
+        </MessageColunmn>
+      </MessageRow>
+    
   );
 });
 

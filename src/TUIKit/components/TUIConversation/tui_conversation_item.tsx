@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { MessageElemType, TencentImSDKPlugin, V2TimConversation, V2TimMessage } from "react-native-tim-js"
 import { Dialog, Input, ScreenWidth, Button, ListItem, Avatar, Icon } from "@rneui/base";
 import FastImage from 'react-native-fast-image';
@@ -12,51 +12,70 @@ export const TUIConversationItem = (props:TUIConversationItemProps) => {
     const {item,onConversationTap} = props;
     const { showName, faceUrl, lastMessage, conversationID, isPinned } = item;
     const haveFaceUrl = !!faceUrl && faceUrl !== "";
+    let atString = "";
+    let hasAtString = false;
     const defaultFaceUrl =
     "https://qcloudimg.tencent-cloud.cn/raw/2c6e4177fcca03de1447a04d8ff76d9c.png";
     const getLastMessageString = (lastMessage: V2TimMessage) => {
-        const { elemType, textElem } = lastMessage;
-        if (elemType === MessageElemType.V2TIM_ELEM_TYPE_TEXT) {
-          return textElem?.text ?? "";
+        if(item.groupAtInfoList?.length!=0 && item.unreadCount!=0){
+          hasAtString = true;
+          // console.log("item groupAtInfoList ",item.conversationID+ JSON.stringify(item.groupAtInfoList))
+          // console.log(item.unreadCount)
+          item.groupAtInfoList?.forEach((item)=>{
+            if(item.atType == 1 && atString != ''){
+              atString = "@Me"
+            } else if(item.atType == 2 && atString != '@All@Me'){
+              atString = "@All"
+            } else if(item.atType == 3){
+              atString = "@All@Me";
+            }
+          })
         }
-        if (elemType === MessageElemType.V2TIM_ELEM_TYPE_VIDEO) {
-          return '["视频消息"]';
+        const { elemType, textElem,status } = lastMessage;
+        if(status == 2){
+          if (elemType === MessageElemType.V2TIM_ELEM_TYPE_TEXT) {
+            return textElem?.text ?? "";
+          }
+          if (elemType === MessageElemType.V2TIM_ELEM_TYPE_VIDEO) {
+            return '["视频消息"]';
+          }
+          if (elemType === MessageElemType.V2TIM_ELEM_TYPE_IMAGE) {
+            return "['图片消息']";
+          }
+          if (elemType === MessageElemType.V2TIM_ELEM_TYPE_GROUP_TIPS) {
+            return "['系统消息']";
+          }
+          if (elemType === MessageElemType.V2TIM_ELEM_TYPE_CUSTOM) {
+            return "['自定义消息']";
+          }
+          if (elemType === MessageElemType.V2TIM_ELEM_TYPE_FILE) {
+            return "['文件消息']";
+          }
+      
+          if (elemType === MessageElemType.V2TIM_ELEM_TYPE_FACE) {
+            return "['表情消息']";
+          }
+          if (elemType === MessageElemType.V2TIM_ELEM_TYPE_MERGER) {
+            return "['合并消息']";
+          }
+          if (elemType === MessageElemType.V2TIM_ELEM_TYPE_LOCATION) {
+            return "['地理位置消息']";
+          }
+          if (elemType === MessageElemType.V2TIM_ELEM_TYPE_SOUND) {
+            return "['语音消息']";
+          }
         }
-        if (elemType === MessageElemType.V2TIM_ELEM_TYPE_IMAGE) {
-          return "['图片消息']";
+        if(status == 4){
+          return "[ 消息被删除 ]"
         }
-        if (elemType === MessageElemType.V2TIM_ELEM_TYPE_GROUP_TIPS) {
-          return "['系统消息']";
-        }
-        if (elemType === MessageElemType.V2TIM_ELEM_TYPE_CUSTOM) {
-          return "['自定义消息']";
-        }
-        if (elemType === MessageElemType.V2TIM_ELEM_TYPE_FILE) {
-          return "['文件消息']";
-        }
-    
-        if (elemType === MessageElemType.V2TIM_ELEM_TYPE_FACE) {
-          return "['表情消息']";
-        }
-        if (elemType === MessageElemType.V2TIM_ELEM_TYPE_MERGER) {
-          return "['合并消息']";
-        }
-        if (elemType === MessageElemType.V2TIM_ELEM_TYPE_LOCATION) {
-          return "['地理位置消息']";
-        }
-        if (elemType === MessageElemType.V2TIM_ELEM_TYPE_SOUND) {
-          return "['语音消息']";
+        if(status == 6){
+          return "[ 消息被撤回 ]"
         }
         return "";
       };
-    const deleteConversation = (conversation:V2TimConversation) => {
-        if(conversation.type == 1){
-          TencentImSDKPlugin.v2TIMManager
-          .getConversationManager().deleteConversation("c2c_"+conversation.conversationID);
-        }else if(conversation.type == 2){
-          TencentImSDKPlugin.v2TIMManager
-          .getConversationManager().deleteConversation("group_"+conversation.conversationID);
-        }
+    const deleteConversation = async (conversation:V2TimConversation) => {
+        let res = await TencentImSDKPlugin.v2TIMManager
+          .getConversationManager().deleteConversation(conversation.conversationID);
         
       }
     const pinConversation = async (conversationID: string, isPinned: boolean) => {
@@ -103,8 +122,11 @@ export const TUIConversationItem = (props:TUIConversationItemProps) => {
             />
       <ListItem.Content>
         <ListItem.Title style={styles.showNameText}>{showName}</ListItem.Title>
-        
-        <ListItem.Subtitle style={styles.lastMessageText} ellipsizeMode={"tail"} numberOfLines={1} >{lastMessage ? getLastMessageString(lastMessage) : " "}</ListItem.Subtitle>
+        <Text style={styles.lastMessageText} ellipsizeMode={"tail"} numberOfLines={1} >
+          {hasAtString && <Text style={{color:'red'}}>atString</Text>}
+          <Text style={{color: "#BBBBBB",}}>{lastMessage ? getLastMessageString(lastMessage) : " "}</Text>
+          
+        </Text>
       </ListItem.Content>
           {lastMessage?.timestamp &&( <ListItem.Content right>
             <ListItem.Title right style={styles.lastMsgtimeText}>

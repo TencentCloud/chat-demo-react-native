@@ -1,4 +1,4 @@
-```.
+.
 ├── README.md
 ├── components
 │   ├── ImageView
@@ -11,84 +11,101 @@
 │   │   ├── image-zoom.style.tsx
 │   │   ├── image-zoom.tsx
 │   │   └── image-zoom.type.tsx
-│   ├── MergeMessageScreen ---合并消息展示界面，用于点击合并消息，在新的页面中展示
+│   ├── MergeMessageScreen -- page for showing merge message after mergeMessage is clicked
 │   │   └── merge_message_screen.tsx
 │   ├── TUIChat
-│   │   ├── driver --- 控制器，用于控制键盘、表情面板、工具面板的展示隐藏逻辑
+│   │   ├── driver -- Controller, used to control the display and hiding logic of the keyboard, expression panel, and tool panel
 │   │   │   ├── driver.ts
 │   │   │   ├── keyboardDriver.ts
 │   │   │   └── viewDriver.ts
 │   │   ├── index.ts
-│   │   └── tui_chat.tsx --- 聊天根组件,包含历史消息页面&发送消息的所有功能，可以从conversation直接跳转到TUIChat
-│   ├── TUIChatHeader --- 聊天页面中的header，显示conversation id和返回按钮
+│   │   ├── merge_message_receiver.tsx
+│   │   └── tui_chat.tsx --- Chat root component, including the history message page & all functions of sending messages, you can jump directly to TUIChat from conversation
+│   ├── TUIChatHeader --- Header in the chat page, showing the conversation id and the return button
 │   │   ├── index.ts
 │   │   └── tui_chat_header.tsx
-│   ├── TUIMessage
+│   ├── TUIConversation -- conversation list component
+│   │   ├── index.ts
+│   │   ├── tui_conversation_item.tsx
+│   │   └── tui_conversation_list.tsx
+│   ├── TUIFriend -- relationship list components, including friend list, friend application list, block list and group list 
+│   │   ├── ApplicationList
+│   │   │   └── tui_application_list.tsx
+│   │   ├── BlockList
+│   │   │   └── tui_block_list.tsx
+│   │   ├── GroupList
+│   │   │   └── tui_group_list.tsx
+│   │   ├── tui_friend_item.tsx
+│   │   ├── tui_friend_list.tsx
+│   │   └── tui_search_friend.tsx
+│   ├── TUIMessage -- message elements in message list
 │   │   ├── element
-│   │   │   ├── audio_element.tsx ---语音消息组件
-│   │   │   ├── custom_element.tsx ---自定义消息组件
-│   │   │   ├── face_element.tsx ---表情消息组件
-│   │   │   ├── file_element.tsx ---文件消息组件
-│   │   │   ├── group_tips_element.tsx ---群提示消息组件
-│   │   │   ├── image_element.tsx ---图片消息组件
+│   │   │   ├── audio_element.tsx
+│   │   │   ├── custom_element.tsx
+│   │   │   ├── face_element.tsx
+│   │   │   ├── file_element.tsx
+│   │   │   ├── group_tips_element.tsx
+│   │   │   ├── image_element.tsx
 │   │   │   ├── index.ts
-│   │   │   ├── location_element.tsx ---地理位置消息组件
-│   │   │   ├── merger_element.tsx ---合并消息组件
-│   │   │   ├── message_avatar.tsx ---消息头像组件
-│   │   │   ├── message_bubble.tsx ---消息气泡组件
-│   │   │   ├── message_colunmn.tsx ---消息列布局组件
-│   │   │   ├── message_row.tsx ---消息行布局组件
-│   │   │   ├── message_sending.tsx ---消息发送中组件
-│   │   │   ├── message_tooltip.tsx ---长按消息提示
-│   │   │   ├── reply_element.tsx ---回复消息组件
-│   │   │   ├── revoke_element.tsx ---撤回消息组件
-│   │   │   ├── text_element.tsx ---文本消息组件
-│   │   │   ├── time_element.tsx ---时间消息组件
-│   │   │   └── video_element.tsx ---视频消息组件
-│   │   └── tui_message.tsx --- 消息组件、处理不同类型的消息渲染逻辑
-│   ├── TUIMessageInput --- 消息输入，包含文字，表情包等
-│   │   ├── emoji_data.ts ---unicode 表情数据
-│   │   ├── message_service.ts ---消息服务，发送各类型消息接口
+│   │   │   ├── location_element.tsx
+│   │   │   ├── merger_element.tsx
+│   │   │   ├── message_avatar.tsx
+│   │   │   ├── message_bubble.tsx
+│   │   │   ├── message_colunmn.tsx
+│   │   │   ├── message_row.tsx
+│   │   │   ├── message_sending.tsx
+│   │   │   ├── message_tooltip.tsx
+│   │   │   ├── reply_element.tsx
+│   │   │   ├── revoke_element.tsx
+│   │   │   ├── text_element.tsx
+│   │   │   ├── time_element.tsx
+│   │   │   └── video_element.tsx
+│   │   └── tui_message.tsx
+│   ├── TUIMessageInput 
+│   │   ├── emoji_data.ts
+│   │   ├── message_service.ts
 │   │   ├── styles.ts
-│   │   ├── tui_message_emoji.tsx ---表情面板
-│   │   ├── tui_message_input.tsx ---输入框
-│   │   ├── tui_message_tool_box.tsx ---工具面板
-│   │   └── tui_message_voice_button.tsx ---语音发送
+│   │   ├── tui_message_at_list.tsx
+│   │   ├── tui_message_emoji.tsx
+│   │   ├── tui_message_input.tsx
+│   │   ├── tui_message_tool_box.tsx
+│   │   ├── tui_message_voice_button.tsx
+│   │   └── utils.ts
 │   ├── TUIMessageList
 │   │   ├── index.ts
-│   │   └── tui_chat_message_list.tsx ---消息列表
+│   │   └── tui_chat_message_list.tsx
 │   ├── VideoScreen
-│   │   └── video_screen.tsx ---视频播放页面
+│   │   └── video_screen.tsx
 │   └── index.ts
 ├── constants
 │   └── index.ts
 ├── hooks
-│   ├── useLoginUser.ts ---获取登录用户
-│   ├── useMessageList.ts ---获取历史消息
-│   └── withMessageMemo.ts ---memo 组件
+│   ├── useLoginUser.ts
+│   ├── useMessageList.ts
+│   └── withMessageMemo.ts
 ├── index.tsx
 ├── interface
 │   ├── index.ts
 │   └── tui_chat.ts
 ├── store
-│   ├── TUIChat --- useReducer 和 useContext 组成的store
+│   ├── TUIChat
 │   │   ├── actions.ts
 │   │   ├── context.tsx
 │   │   ├── index.ts
 │   │   ├── reducer.ts
 │   │   └── selector.ts
+│   ├── TUIConversation
 │   └── index.ts
-├── theme --- 主题，分为黑白两种
+├── theme
 │   ├── index.ts
 │   └── tui_chat_theme.ts
 ├── type
 │   └── runes.d.ts
 └── utils
-├── audio_player.ts ---语音播放器
-├── index.ts
-├── message.ts ---消息工具函数
-├── message_download.ts ---文本消息下载函数
-└── time.ts ---消息时间解析工具函数
-```
+    ├── audio_player.ts
+    ├── index.ts
+    ├── message.ts
+    ├── message_download.ts
+    └── time.ts
 
-21 directories, 70 files
+27 directories, 82 files

@@ -16,6 +16,7 @@ import {
   TencentImSDKPlugin,
   MessageElemType,
   V2TimFriendInfo,
+  V2TimGroupInfo,
 } from "react-native-tim-js";
 import { RootStackParamList } from "../interface";
 import { getCurrentTime } from "../TUIKit";
@@ -23,6 +24,8 @@ import { Gesture, GestureDetector, GestureHandlerRootView } from "react-native-g
 import { Dialog, Input, ScreenWidth, Button, ListItem, Avatar, Icon, Tab, TabView, ScreenHeight } from "@rneui/base";
 import { TUIConversationList } from "../TUIKit/components/TUIConversation";
 import { TUIFriendList } from "../TUIKit/components/TUIFriend/tui_friend_list";
+import { V2TimFriendApplication } from "react-native-tim-js/lib/typescript/src/interface/v2TimFriendApplication";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 
@@ -50,6 +53,7 @@ function HomeScreen({ route, navigation }: Props) {
   }, []);
 
   const handleConversationChanged = async (cList: V2TimConversation[]) => {
+    // console.log("conversation changed")
     setConversationList((prevState) => {
       let tmpCv: V2TimConversation[] = [];
       cList.map((item) => {
@@ -278,33 +282,74 @@ function HomeScreen({ route, navigation }: Props) {
 
   const onFriendTap = (friend:V2TimFriendInfo) => {
     const messageList = cachedMessageList.get("c2c_"+friend.userID) ?? [];
-            navigation.navigate("Chat", {
-              conversation: {
-                conversationID: "c2c_"+friend.userID,
-                showName: friend.friendRemark!=""?friend.friendRemark:friend.userID,
-                userID: friend.userID,
-                groupID: '',
-                type: 1,
-              },
-              userID: friend.userID,
-              initialMessageList: messageList,
-              unMount: (message: V2TimMessage[]) => {
-                setCachedMessageList((prev) =>
-                  prev?.set("c2c_"+friend.userID!, message)
-                );
-              },
-            });
+    navigation.navigate("Chat", {
+      conversation: {
+        conversationID: "c2c_"+friend.userID,
+        showName: friend.friendRemark!=""?friend.friendRemark:friend.userID,
+        userID: friend.userID,
+        groupID: '',
+        type: 1,
+      },
+      userID: friend.userID,
+      initialMessageList: messageList,
+      unMount: (message: V2TimMessage[]) => {
+        setCachedMessageList((prev) =>
+          prev?.set("c2c_"+friend.userID!, message)
+        );
+      },
+    });
   }
 
-  return (<View style={{height:ScreenHeight}}>
-    <TabView value={index} onChange={setIndex} animationType="spring" >
-      <TabView.Item style={{width: '100%' }}>
+  const onGroupTap = (group:V2TimGroupInfo) => {
+    const messageList = cachedMessageList.get("group_"+group.groupID) ?? [];
+    navigation.navigate("Chat", {
+      conversation: {
+        conversationID: "group_"+group.groupID,
+        showName: group.groupName!=""?group.groupName:group.groupID,
+        userID: '',
+        groupID: group.groupID,
+        type: 2,
+      },
+      userID: userID,
+      initialMessageList: messageList,
+      unMount: (message: V2TimMessage[]) => {
+        setCachedMessageList((prev) =>
+          prev?.set("group_"+group.groupID!, message)
+        );
+      },
+    });
+  }
+
+  const onGroupListTap = (groupList:V2TimGroupInfo[])=>{
+    navigation.navigate("GroupList",{
+      groupList,
+      onGroupTap
+    });
+  }
+
+  const onBlockListTap = (blockList:V2TimFriendInfo[])=>{
+    navigation.navigate("BlockList",{
+      blockList,
+    })
+  }
+
+  const onFriendApplicationTap = (applicationList:V2TimFriendApplication[])=>{
+    navigation.navigate("FriendApplicationList",{
+      applicationList,
+    })
+  }
+
+  return (
+  <SafeAreaProvider>
+    <View style={{height:'100%'}}>
+    {/* <TabView value={index} onChange={setIndex} animationType="spring" >
+      <TabView.Item style={{width: '100%' }}> */}
           
           <TUIConversationList userID={userID} onConversationTap={onConversationTap}></TUIConversationList>
-      </TabView.Item>
+      {/* </TabView.Item>
 
       <TabView.Item style={{ width: '100%' }}>
-        <TUIFriendList onFriendTap={onFriendTap}></TUIFriendList>
+        <TUIFriendList onFriendTap={onFriendTap} onGroupListTap={onGroupListTap} onBlockListTap={onBlockListTap} onApplicationListTap={onFriendApplicationTap}></TUIFriendList>
       </TabView.Item>
       
       <TabView.Item style={{ backgroundColor: 'green', width: '100%' }}>
@@ -340,8 +385,10 @@ function HomeScreen({ route, navigation }: Props) {
         //   backgroundColor: active ? "#809AB3" : undefined,
         // })}
       />
-    </Tab>
-  </View>);
+    </Tab> */}
+  </View>
+  </SafeAreaProvider>
+  );
 
 }
 

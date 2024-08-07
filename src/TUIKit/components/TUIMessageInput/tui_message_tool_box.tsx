@@ -1,6 +1,6 @@
 import {Image, Text, useTheme} from '@rneui/themed';
 import React from 'react';
-import {Pressable} from 'react-native';
+import {PermissionsAndroid, Pressable} from 'react-native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {Animated, LayoutChangeEvent, View, ViewStyle} from 'react-native';
 import {styles} from './styles';
@@ -46,14 +46,37 @@ export const TUIMessageToolBox = (props: TUIMessageToolBoxProps) => {
       icon: require('../../../assets/file.png'),
     },
   ];
+  const requestCameraPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: "App Camera Permission",
+          message:"App needs access to your camera ",
+          buttonNeutral: "Ask Me Later",
+          buttonNegative: "Cancel",
+          buttonPositive: "OK"
+        }
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log("Camera permission given");
+      } else {
+        console.log("Camera permission denied");
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
 
   const handleToolBoxItemPress = async (id: string) => {
-    if (id === 'camera') {
+    if (id === 'camera') { 
+      await requestCameraPermission();
       const result = await launchCamera({
         mediaType: 'mixed',
         maxHeight: 256,
         presentationStyle: 'fullScreen',
       });
+      console.log("camera result",result);
       const {assets} = result;
       if (assets) {
         const {uri, width, height, type, duration, fileName} = assets[0]!;

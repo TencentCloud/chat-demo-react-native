@@ -8,19 +8,21 @@ export const initialState = {
   messageList: [],
   repliedMessage: undefined,
   testCount: 0,
+  messageReadReceipt:new Map()
 };
 
 export const TUIChatReducer = (state: TUIChatState, action: TUIChatAction) => {
   switch (action.type) {
     case ACTION_TYPE.UPDATE_MESSAGE: {
-      const messageList = [...state.messageList, ...action.value];
-      state.messageList = messageList;
+      const filteredB = action.value.filter((itemB) => !state.messageList.some((itemA) => itemA.msgID === itemB.msgID));
+      state.messageList = [...state.messageList, ...filteredB];
       return { ...state };
     }
     case ACTION_TYPE.SET_MESSAGE: {
+      const filteredB = action.value.filter((itemB) => !state.messageList.some((itemA) => itemA.msgID === itemB.msgID));
       return {
         ...state,
-        messageList: action.value,
+        messageList: [...state.messageList, ...filteredB],
       };
     }
     case ACTION_TYPE.UPDATE_MESSAGE_ITEM: {
@@ -87,7 +89,34 @@ export const TUIChatReducer = (state: TUIChatState, action: TUIChatAction) => {
         repliedMessage: message,
       };
     }
+    case ACTION_TYPE.UPDATE_MESSAGE_RECEIPT:{
+      const {receipt} = action.value;
+      let originMap = state.messageReadReceipt;
+      receipt.forEach((item)=>{
+       originMap?.set(item.msgID!,item);
+      })
+      return {
+        ...state,
+        messageReadReceipt:originMap
+      }
+    }
+    case ACTION_TYPE.UPDATE_C2C_MESSAGE_RECEIPT:{
+      const {receipt} = action.value;
+      let originMessage = state.messageList;
+      originMessage.forEach((item)=>{
+        let filter = receipt.filter(receiptItem=>receiptItem.msgID===item.msgID);
+        if(filter.length>0){
+          const index = state.messageList.findIndex((item2) => item2.msgID === item.msgID);
+          item.isPeerRead = true;
+          originMessage[index] = item;
+        }
+      })
+      return {
+        ...state
+      }
+    }
     default:
       return state;
   }
+  
 };

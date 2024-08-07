@@ -20,6 +20,7 @@ This project is React Native Chat Demo, which is a Demo project developed by [re
 ### Environment setup
 
 Refer to React Naitve [official document](https://reactnative.dev/docs/environment-setup) to build a local development environment.
+The React Native version provided by this UIKit demo is 0.73.9, and the minimum supported React Native version is 0.68.3.
 
 ### Install dependences
 
@@ -36,8 +37,8 @@ pod install
 ```
 
 ### Run
-
-1. Fill in the prepared `SDKAppID, UserSig` into the `config.ts` file.
+0. Get `SDKAppID, Secret` from the console.
+1. Fill in the prepared `SDKAppID, Secret` into the `config.ts` file. (Filling in the existing userID on the start page will automatically calculate userSig and log in.)
 2. Execute the following command to run:
 
 ```
@@ -49,6 +50,9 @@ yarn ios
 npm run android
 npm run ios
 ```
+
+### Code Directory
+The code directory structure can be found in `src/TUIKit/README.md`
 
 ### FAQ
 
@@ -71,3 +75,54 @@ npm run ios
 - No response when clicking to take a photo?
 
   To use the camera function, please use a real device for debugging.
+- npm run ios failed?
+  - It is best to run ios in xcode. If there is an error in the dependency RCT-Folly hash, please click the file in xcode and follow the prompts to modify the error and try to run again.
+- iOS Flipper package error?
+  - Please refer to [Flipper error](https://stackoverflow.com/questions/78244457/reactnative-app-build-failing-with-flipper-error)
+- iOS Architecture x86_64 error?
+  - Add x86_64 from xcode framework-> target -> buildSetting -> valid architectures, please refer to [x86_64 error](https://blog.csdn.net/LY0314J/article/details/102918338)
+- iOS cannot find main.js.bundle
+  - First check whether the relevant content in config is filled in, then refer to [cannot find main.js.bundle](https://stackoverflow.com/questions/49505446/main-jsbundle-does-not-exist-this-must-be-a-bug-with-echo-react-native)
+- After using `react-native-reanimated`, there is an error `Cannot assign to read-only property "validated"` or `Tried to synchronously call a non-worklet function on the UI thread` when introducing TUIKit
+Modify the following content in the code
+```js
+    // TUIKit/Components/TUIMessage/element/message_tooltip.tsx
+      import { runOnJS } from 'react-native-reanimated';
+      //The original gesture function is changed to the following content
+      const handleOnLongPress = (absoluteY: number, y: number) => {
+        const halfHeight = componentPosition!.height
+        if (Keyboard.isVisible()) {
+          setTimeout(() => {
+            setPositionY(
+            absoluteY - y + halfHeight +
+            (props.keyboardHeight ?? 0) - 25,
+            )
+            setOpen(true)
+          }, 200)
+        } else {
+          setPositionY(absoluteY - y + halfHeight)
+          setOpen(true)
+        }
+      }
+      const gesture = Gesture.LongPress().onStart((event:
+        { absoluteY: any; y: any }) => {
+        const { absoluteY, y } = event
+        runOnJS(handleOnLongPress)(absoluteY, y)
+      })
+      // The original closeTooltip is changed to the following
+      const close = () => {
+        setOpen(false);
+      }
+      const closeTooltip = Gesture.Tap().onStart(() => {
+        runOnJS(close)()
+      })
+      // TUIKit/components/TUIChat/tui_chat.tsx
+      // Modify the code of gesture function, and keep other functions unchanged
+      const hidePanel = () => {
+        driver?.hide(driverState);
+      }
+      const gesture = Gesture.Tap().onStart(() => {
+        console.log("tap");
+        runOnJS(hidepanel)()
+      });
+  ```

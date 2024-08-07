@@ -6,6 +6,7 @@ import React, {
   useState,
 } from "react";
 import {
+  Keyboard,
   NativeSyntheticEvent,
   TextInput,
   TextInputSubmitEditingEventData,
@@ -20,6 +21,9 @@ import runes from "runes";
 import { useRepliedMessage } from "../../store/TUIChat/selector";
 import { MessageUtils } from "../../utils/message";
 import FastImage from "react-native-fast-image";
+import { TUIMessageAtListPopup } from "./tui_message_at_list";
+import { V2TimGroupMemberFullInfo } from "react-native-tim-js";
+import { Utils } from "./utils";
 
 interface TUIMessageInputInterface {
   loginUserID: string;
@@ -32,6 +36,7 @@ interface TUIMessageInputInterface {
   showSound?: boolean;
   showFace?: boolean;
   showToolBox?: boolean;
+  onMessageSend?:()=>void;
 }
 
 export interface TUIMessageInputRef {
@@ -53,6 +58,7 @@ export const TUIMessageInput = forwardRef<
     showFace = true,
     showSound = true,
     showToolBox = true,
+    onMessageSend
   } = props;
   const styles = useStyles();
   const [text, setText] = useState<string>("");
@@ -61,6 +67,11 @@ export const TUIMessageInput = forwardRef<
   const textInputRef = useRef<TextInput | null>(null);
   const loginUserInfo = useLoginUser(props.loginUserID);
   const { dispatch } = useTUIChatContext();
+  const [showAtList,setShowAtList] = useState(false);
+  const [atUserList,setAtUserList] = useState<V2TimGroupMemberFullInfo[]>([]);
+  const [selectionCor,setSelectionCor] = useState(0);
+  const [atNameInput,setAtNameInput] = useState('');
+  const [oldInputText,setOldInputText] = useState('');
   const messageService = new MessageService(dispatch, {
     userInfo: loginUserInfo,
     convID,
@@ -69,6 +80,39 @@ export const TUIMessageInput = forwardRef<
 
   const handleTextChange = (value: string) => {
     setText(value);
+    const textArr = value.split('@');
+    const lastInput = textArr[textArr.length - 1]; 
+    setAtNameInput(lastInput);
+    // mentioning member in group
+    if(convType == 2){
+      let {characters,index,isAddText} = Utils.compareString(oldInputText,value);
+      if(!isAddText){
+        setShowAtList(false);
+        console.log("=====setShowAtList false====")
+        let atIndex = oldInputText.lastIndexOf('@',Utils.max(0,index-1));
+        let removedLabelList = [];
+        if(atIndex != -1 && characters!='@'){
+          removedLabelList.push(oldInputText.substring(atIndex+1,index));
+          let spaceIndex = index;
+          let count = 0;
+          while(spaceIndex != -1 && count < 5){
+            spaceIndex = oldInputText.indexOf(' ',spaceIndex+1);
+            if(spaceIndex!= -1){
+              removedLabelList.push(oldInputText.substring(atIndex+1,spaceIndex));
+              count++;
+            }else{
+              removedLabelList.push(oldInputText.substring(atIndex+1));
+            }
+          }
+          let mentionedUserExist = removedLabelList.some((item)=>atUserList.some((a)=>a.nickName == item));
+          if(mentionedUserExist){
+            let updatedList = atUserList.filter((item)=> !removedLabelList.includes(item.nickName!))
+            setAtUserList(updatedList);
+          }
+        }
+      }
+    }
+    setOldInputText(value);
   };
 
   useImperativeHandle(ref, () => ({
@@ -85,9 +129,16 @@ export const TUIMessageInput = forwardRef<
   const hanldeSubmiting = (
     event?: NativeSyntheticEvent<TextInputSubmitEditingEventData>
   ) => {
+    console.log("hanldeSubmiting here")
     if (text && text !== "") {
       sendTextMessage();
       setText("");
+    }
+    if(textInputRef.current){
+      textInputRef.current.clear();
+    }
+    if(onMessageSend){
+      onMessageSend();
     }
     event?.preventDefault();
   };
@@ -95,7 +146,15 @@ export const TUIMessageInput = forwardRef<
   const sendTextMessage = () => {
     if (repliedMessage) {
       messageService.sendRepliedMessage(text, repliedMessage);
-    } else {
+    } 
+    else if(atUserList.length > 0){
+      let list:string[] = [];
+      atUserList.forEach((item)=>{
+        list.push(item.userID!);
+      });
+      messageService.sendTextAtMessage(text,list);
+      setAtUserList([]);
+    }else {
       messageService.sendTextMessage(text);
     }
   };
@@ -117,6 +176,36 @@ export const TUIMessageInput = forwardRef<
       repliedMessage!
     )}: ${MessageUtils.getAbstractMessageAsync(repliedMessage!)}`;
   };
+
+  const atListSelected = (item?:V2TimGroupMemberFullInfo)=>{
+    
+    if(item){
+      if(atNameInput != ''){
+        const lastIndex = text.lastIndexOf('@'); // 查找最后一个 "@" 的索引
+        const result = text.substring(0, lastIndex+1);
+        
+        setText(result+item.nickName+' ');
+        
+      }else{
+        setText((prevState)=>{
+          // console.log("text "+prevState + item.nickName);
+          return prevState + item.nickName + ' ';
+        })
+      }
+      setAtUserList((prevState)=>{
+        return [...prevState,item]
+      });
+    }
+    console.log("====showAtList false====")
+    setAtNameInput('');
+    setShowAtList(false);
+  }
+
+  const onTextInputBlur = () => {
+    console.log('onTextInputBlur');
+  }
+
+
 
   return (
     <SafeAreaView
@@ -144,7 +233,7 @@ export const TUIMessageInput = forwardRef<
       <View style={styles.rowContainer}>
         {showSound && (
           <Image
-            ImageComponent={FastImage}
+            // ImageComponent={FastImage}
             source={
               showVoiceRecord
                 ? require("../../../assets/keyboard.png")
@@ -176,20 +265,34 @@ export const TUIMessageInput = forwardRef<
                   if (repliedMessage && text === "") {
                     handleBackSpaceTap();
                   }
-                }
+                  // console.log("====showAtList false====")
+                  // setShowAtList(false);
+                } else if(nativeEvent.key === '@' && convType ==2) {
+                  setShowAtList(true);
+                  return '@';
+                } 
+                // else{
+                //   setShowAtList(false);
+                // }
               }}
               ref={(input) => (textInputRef.current = input)}
               onChangeText={handleTextChange}
               onSubmitEditing={hanldeSubmiting}
+              onBlur={onTextInputBlur}
+              onSelectionChange={(e) => {setSelectionCor(e.nativeEvent.selection.start);}}
               style={styles.inputStyle}
               returnKeyType="send"
               value={text}
             />
-          )}
+          )
+          }
+          {
+            !showVoiceRecord && showAtList && <TUIMessageAtListPopup groupID={convID} userInput={atNameInput} selectionStart={selectionCor} atListSelected={atListSelected}/>
+          }
         </View>
         {showFace && (
           <Image
-            ImageComponent={FastImage}
+            // ImageComponent={FastImage}
             source={
               driverName === "emoji"
                 ? require("../../../assets/keyboard.png")
@@ -210,7 +313,7 @@ export const TUIMessageInput = forwardRef<
         )}
         {showToolBox && (
           <Image
-            ImageComponent={FastImage}
+            // ImageComponent={FastImage}
             source={require("../../../assets/more.png")}
             style={styles.iconSize}
             onPress={props.onToolBoxTap}

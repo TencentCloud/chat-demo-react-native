@@ -1,15 +1,18 @@
 import {ScreenWidth} from '@rneui/base';
 import {Badge, Icon, makeStyles} from '@rneui/themed';
 import React, {PropsWithChildren} from 'react';
-import {View} from 'react-native';
+import {Image, View} from 'react-native';
 import {MessageElemType, V2TimMessage} from 'react-native-tim-js';
 import {SOUND_READ} from '../../../constants';
 import {MessageSending} from './message_sending';
 import {MessageToolTip} from './message_tooltip';
+import { useMessageReceipt } from '../../../store/TUIChat/selector';
 
 interface MessageBubbleProps {
   message: V2TimMessage;
   keyboardHeight?: number;
+  multiSelectCallback?:()=>void;
+  startSelect?:()=>void;
 }
 
 export const MessageBubble = <T extends MessageBubbleProps>(
@@ -23,6 +26,8 @@ export const MessageBubble = <T extends MessageBubbleProps>(
   const showRedBadge =
     isSoundElem && !isSelf && message.localCustomInt !== SOUND_READ;
   const messageStatus = message.status;
+  const {messageReadReceipt} = useMessageReceipt();
+
 
   const getStyle = () => {
     const isAVMessage =
@@ -63,14 +68,46 @@ export const MessageBubble = <T extends MessageBubbleProps>(
     return <View />;
   };
 
+  const getMessageReadStatus = ()=>{
+    // console.log(`message ${JSON.stringify(message)}`)
+    if(message.isSelf && message.msgID){
+      if(message.groupID!=null && message.groupID !== 'null' && message.groupID !== ''){
+        let receipt = messageReadReceipt?.get(message.msgID);
+        if(receipt){
+          if(receipt.readCount! >0){
+            return  (<View style={styles.statusContainer}>
+            <Image style={styles.readIcon} source={require('../../../../assets/group_read.png')}/>
+            </View>)
+          }
+        } 
+        return (<View style={styles.statusContainer}>
+          <Image style={styles.readIcon} source={require('../../../../assets/group_not_read.png')}/>
+        </View>);
+      } else if(message.userID!=null && message.userID !== 'null' && message.userID !== ''){
+        if(message.isPeerRead == true){
+          return(<View style={styles.statusContainer}>
+              <Image style={styles.readIcon} source={require('../../../../assets/c2c_read.png')}/>
+              </View>
+          );
+        } else{
+          return(<View style={styles.statusContainer}>
+            <Image style={styles.readIcon} source={require('../../../../assets/c2c_not_read.png')}/>
+          </View>);
+        }
+      }
+    }
+    return <View/>
+  }
+
   return (
-    <MessageToolTip message={message} keyboardHeight={keyboardHeight}>
+    <MessageToolTip message={message} keyboardHeight={keyboardHeight} multiSelectCallback={props.multiSelectCallback} startSelect={props.startSelect}>
       <View style={styles.bubbleContainer}>
         <View style={getStyle()}>{children}</View>
         {showRedBadge && (
           <Badge status="error" badgeStyle={styles.badgeStyle} />
         )}
         {isSelf && messageStatus && getMessageStatus(messageStatus)}
+        {isSelf && messageStatus == 2 && getMessageReadStatus()}
       </View>
     </MessageToolTip>
   );
@@ -141,4 +178,8 @@ const useStyles = makeStyles((theme, isSelf: boolean) => ({
     backgroundColor: '#FF584C',
     marginBottom: 12,
   },
+  readIcon:{
+    width:18,
+    height:18
+  }
 }));

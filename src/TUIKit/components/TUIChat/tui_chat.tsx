@@ -1,11 +1,11 @@
 import { ThemeProvider } from "@rneui/themed";
 import React, { Fragment, useCallback, useMemo, useRef, useState } from "react";
-import { Animated, findNodeHandle, StyleSheet } from "react-native";
+import { Animated, findNodeHandle, Image, Pressable, StyleSheet, Text } from "react-native";
 import { View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import type { V2TimMessage } from "react-native-tim-js";
+import { TencentImSDKPlugin, V2TimConversation, type V2TimMessage } from "react-native-tim-js";
 import { useMessageList } from "../../hooks/useMessageList";
-import { TUIChatContextProvider } from "../../store";
+import { TUIChatAction, TUIChatContextProvider, deleteMessage, useTUIChatContext } from "../../store";
 import { tuiChatTheme } from "../../theme";
 import { TUIChatHeader } from "../TUIChatHeader";
 import {
@@ -29,7 +29,7 @@ import {
   TUIMessageInput,
   TUIMessageInputRef,
 } from "../TUIMessageInput/tui_message_input";
-import { TUIMessageList } from "../TUIMessageList";
+import { TUIMessageList, TUIMessageListRef } from "../TUIMessageList";
 import {
   KeyboardInsetsView,
   getEdgeInsetsForView,
@@ -46,7 +46,8 @@ import {
 } from "react-native-gesture-handler";
 import type { TUIChatProps } from "../../interface";
 import { MessageAvatar } from "../TUIMessage/element/message_avatar";
-import { ScreenHeight, ScreenWidth } from "@rneui/base";
+import { Dialog, Overlay, ScreenHeight, ScreenWidth } from "@rneui/base";
+import { MergeMessageReceiver } from "./merge_message_receiver";
 // import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
 export const TUIChat = (props: TUIChatProps) => {
@@ -88,6 +89,7 @@ const MessageViewWithInput = (props: TUIChatProps) => {
   const { userID, groupID, type } = conversation;
   const convID = type === 1 ? userID : groupID;
   const tuiMessageInputRef = useRef<TUIMessageInputRef>(null);
+  const tuiMessageListRef = useRef<TUIMessageListRef>(null);
   const senderRef = useRef<View>(null);
   const [bottom, setBottom] = useState(25);
   const emoji = useRef(new ViewDriver("emoji")).current;
@@ -96,6 +98,11 @@ const MessageViewWithInput = (props: TUIChatProps) => {
   const [driver, setDriver] = useState<Driver>();
   const [translateY, setTranslateY] = useState(new Animated.Value(0));
   const [translateMLY, setTranslateMLY] = useState(new Animated.Value(0));
+  const [isSelectMode,setSelectMode] = useState(false);
+  const [showShareDialog,setShowShareDialog] = useState(false);
+  const [showConfirmDialog,setShowConfirmDialog] = useState(false);
+  const [selected_conversation,setSelectedConversation] = useState<V2TimConversation>({conversationID:''});
+  const [selectedList,setSelectedList] = useState<string[]>([]);
   const driverState = {
     bottom,
     driver,
@@ -109,6 +116,7 @@ const MessageViewWithInput = (props: TUIChatProps) => {
     if (text) {
       tuiMessageInputRef.current?.addTextValue(text);
       tuiMessageInputRef.current?.getTextInputRef().current?.focus();
+      // tuiMessageInputRef.current?.hanldeSubmiting();
     }
   }, []);
 
@@ -205,6 +213,14 @@ const MessageViewWithInput = (props: TUIChatProps) => {
     tuiMessageInputRef.current?.hanldeSubmiting();
   }, []);
 
+  const onMessageSend = ()=>{
+    let data = tuiMessageListRef.current?.getItemCount();
+    if(data!==undefined && data!>2){
+      tuiMessageListRef.current?.scrollToIndex(0);
+    }
+    
+  }
+
   const mainStyle = {
     transform: [
       {
@@ -221,15 +237,142 @@ const MessageViewWithInput = (props: TUIChatProps) => {
     ],
   };
 
-  const viewNode = useRef<View | null>();
+  const viewNode = useRef<View>(null);
 
   const gesture = Gesture.Tap().onStart(() => {
-    console.log("tap");
+    console.log("tappppp");
     driver?.hide(driverState);
   });
 
+  const shareDialog = () => {
+    return(
+      <Overlay
+      isVisible={showShareDialog}
+      onBackdropPress={()=>{setShowShareDialog(!setShowShareDialog); setShowConfirmDialog(false)}}
+      overlayStyle={{backgroundColor:'white',height:ScreenHeight*2/3,width:ScreenWidth*2/3}}
+      >
+        {MergeMessageReceiver({selectConversationCallback:(conversation:V2TimConversation)=>{
+          setSelectedConversation(conversation);
+          setShowConfirmDialog(true);
+        }})}
+      <Dialog
+      isVisible={showConfirmDialog}
+      onBackdropPress={()=>{setShowConfirmDialog(!setShowConfirmDialog);}}
+      overlayStyle={{backgroundColor:'white'}}
+    >
+      <Dialog.Title title="Dialog Title"/>
+      <Text>将消息分享给{selected_conversation!.showName? selected_conversation!.showName:selected_conversation!.conversationID}</Text>
+      <Dialog.Actions>
+        <Dialog.Button title="确定" onPress={() => {
+          console.log("confirm",selected_conversation!.type)
+          if(selected_conversation!.type == 1){
+            console.log("userID",selected_conversation!.userID)
+            sendMergeMessage(selectedList,selected_conversation!.userID!,'')
+          }else {
+            console.log("groupID",selected_conversation!.groupID)
+            sendMergeMessage(selectedList,'',selected_conversation!.groupID!)
+          }
+          setShowConfirmDialog(false);
+          setShowShareDialog(false);
+          setSelectMode(false);
+          // console.log("selectedList",selectedList);
+  
+        }}/>
+        <Dialog.Button title="取消" onPress={() => {
+          setShowShareDialog(false);
+          setShowConfirmDialog(false);
+        }}/>
+      </Dialog.Actions>
+    </Dialog>
+      </Overlay>
+
+    );
+  }
+
+  const multiSelectMode = () => {
+    setSelectedList([]);
+    console.log("multiSelectmode here");
+    setSelectMode(true);
+  }
+
+  const multiSelectBar = () => {
+    return (
+      <View style={styles.multiSelecBar}>
+        <View >
+          <Pressable onPress={()=>{
+            // console.log("delete")
+            deleteMultiMessage(selectedList);
+            setSelectMode(false);  
+          }}>
+            <Image style={styles.icon} source={require('../../../assets/delete_message.png')}/>
+          </Pressable>
+        </View>
+        <View>
+          <Text>{selectedList.length} selected</Text>
+        </View>
+        <View>
+          <Pressable onPress={()=>{
+            console.log("merge")
+            setShowShareDialog(true);
+
+          }}>
+            <Image style={styles.icon} source={require('../../../assets/share.png')}/>
+          </Pressable>
+        </View>
+      </View>
+    );
+  }
+  const messageSelctedCallback=(msgID:string,isAdd:boolean)=>{
+    // console.log(`msgID ${msgID} isAdd ${isAdd}`);
+    if(isAdd){
+      setSelectedList((prev)=>{
+        return [...prev,msgID]
+      })
+    } else {
+      
+      setSelectedList((prev)=>{
+        let list = prev;
+        list.splice(list.indexOf(msgID),1)
+        return [...prev]
+      })
+    }
+    console.log(selectedList);
+  }
+  const {dispatch} = useTUIChatContext();
+  const deleteMultiMessage = async (msgIDs:string[]) => {
+    const res = await TencentImSDKPlugin.v2TIMManager.getMessageManager().deleteMessages(msgIDs);
+    if(res.code == 0){
+      msgIDs.forEach((msgID)=>{
+        dispatch(
+          deleteMessage({
+            msgID,
+          })
+        );
+      })
+      
+    }
+  }
+
+  const sendMergeMessage = async (msgIDs:string[],receiver:string,groupID:string) => {
+    const res = await TencentImSDKPlugin.v2TIMManager.getMessageManager().createMergerMessage(msgIDs,"mergeMessage",["mergeMessage"],"mergemessage");
+    console.log("-----mergerMessage",res.code)
+    if(res.code == 0){
+      const res2 = await TencentImSDKPlugin.v2TIMManager.getMessageManager().sendMessage({id:res.data?.id!,receiver:receiver,groupID:groupID});
+      console.log("send success",res2.code);
+    }
+  }
+
   return (
+    <SafeAreaProvider>
     <Fragment>
+      {
+        isSelectMode && <View style={styles.cancelBar}>
+        <Pressable onPress={()=>{setSelectMode(false)}}>
+          <Text style={styles.cancelText}>Cancel</Text>
+        </Pressable>
+      </View>
+      }
+       {shareDialog()}
       <GestureDetector gesture={gesture}>
         <Animated.View
           style={[
@@ -237,7 +380,7 @@ const MessageViewWithInput = (props: TUIChatProps) => {
             messageListContainerStyle,
             { backgroundColor: "white" },
           ]}
-          ref={(ref: View | null | undefined) => (viewNode.current = ref)}
+          ref={viewNode}
           onLayout={() => {
             viewNode.current?.measure((x, y, width, height) => {
               keyboard.onFillMessageLayout(height);
@@ -247,6 +390,7 @@ const MessageViewWithInput = (props: TUIChatProps) => {
           }}
         >
           <TUIMessageList
+            ref={tuiMessageListRef}
             MessageElement={messageItemOption?.ItemComponent ?? MessageElement}
             onLoadMore={onLoadMore}
             unmount={unMount}
@@ -262,10 +406,14 @@ const MessageViewWithInput = (props: TUIChatProps) => {
                 toolbox.shown && toolbox.hide(driverState);
               }
             }}
+            multiSelectCallback={multiSelectMode}
+            isSelectMode={isSelectMode}
+            messageSelctedCallback={messageSelctedCallback}
           />
         </Animated.View>
       </GestureDetector>
-      <KeyboardInsetsView
+      {isSelectMode && multiSelectBar()}
+      {!isSelectMode && <KeyboardInsetsView
         style={[mainStyle]}
         onKeyboard={keyboard.createCallback(driverState)}
         onLayout={onLayout}
@@ -292,8 +440,9 @@ const MessageViewWithInput = (props: TUIChatProps) => {
               toolbox.hide(driverState);
             }
           }}
+          onMessageSend={onMessageSend}
         />
-      </KeyboardInsetsView>
+      </KeyboardInsetsView>}
       <TUIMessageToolBox
         loginUserID={loginUserID}
         convID={convID ?? ""}
@@ -314,7 +463,10 @@ const MessageViewWithInput = (props: TUIChatProps) => {
           ...emoji.style
         }}
       />
+     
     </Fragment>
+
+    </SafeAreaProvider>
   );
 };
 const styles = StyleSheet.create({
@@ -327,4 +479,29 @@ const styles = StyleSheet.create({
   fill: {
     flex: 1,
   },
+  multiSelecBar:{
+    display:'flex',
+    flexDirection:'row',
+    justifyContent:'space-between',
+    height:60,
+    backgroundColor:'#ececec',
+    paddingHorizontal:10,
+    paddingVertical:5
+  },
+  icon:{
+    width:25,
+    height:25,
+  },
+  cancelBar:{
+    display:'flex',
+    justifyContent:'flex-start',
+    backgroundColor:'#ececec',
+    paddingHorizontal:10,
+    paddingVertical:5
+  },
+  cancelText:{
+    fontSize:16,
+    color:'blue'
+  }
 });
+

@@ -91,7 +91,7 @@ export const VideoElement = (props: {
       }
       setSnapShotPath(snapshotUrl ?? '');
     };
-
+    console.log(`have local path ${haveLocalVideoPath} ${localSnapshotUrl}`)
     const getVideoRenderUrl = async () => {
       if (haveLocalVideoPath) {
         const isExist = await RNFS.exists(videoPath!);
@@ -132,8 +132,8 @@ export const VideoElement = (props: {
         }}
         activeOpacity={0.8}>
         {snapShotPath !== '' && (
-          <Image
-            ImageComponent={FastImage}
+          <FastImage
+            // ImageComponent={FastImage}
             source={{uri: snapShotPath}}
             style={{
               ...styles.video,
@@ -148,7 +148,7 @@ export const VideoElement = (props: {
 
       <View style={styles.playContainer}>
         <Image
-          ImageComponent={FastImage}
+          // ImageComponent={FastImage}
           source={require('../../../../assets/play.png')}
           style={{
             width: styles.playContainer.width,

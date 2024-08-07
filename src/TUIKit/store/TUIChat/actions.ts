@@ -1,4 +1,4 @@
-import type { V2TimMessage } from 'react-native-tim-js/lib/typescript/src/interface';
+import type { V2TimMessage, V2TimMessageReceipt } from 'react-native-tim-js/lib/typescript/src/interface';
 
 export type TUIChatAction =
   | {
@@ -35,13 +35,26 @@ export type TUIChatAction =
       value: {
         msgID: string;
       };
-    }
+    } 
   | {
       type: ACTION_TYPE.SET_REPLIED_MESSAGE;
       value: {
         message?: V2TimMessage;
       };
+    }
+  | {
+      type:ACTION_TYPE.UPDATE_MESSAGE_RECEIPT;
+      value:{
+        receipt:V2TimMessageReceipt[];
+      }
+    }
+  | {
+      type:ACTION_TYPE.UPDATE_C2C_MESSAGE_RECEIPT;
+      value:{
+        receipt:V2TimMessageReceipt[];
+      }
     };
+    
 
 export enum ACTION_TYPE {
   UPDATE_MESSAGE = 'update_message',
@@ -52,6 +65,8 @@ export enum ACTION_TYPE {
   DELETE_MESSAGE = 'delete_message',
   REVOKE_MESSAGE = 'revoke_message',
   SET_REPLIED_MESSAGE = 'set_replied_message',
+  UPDATE_MESSAGE_RECEIPT = 'update_message_receipt',
+  UPDATE_C2C_MESSAGE_RECEIPT = 'update_c2c_message_receipt' 
 }
 
 export const updateMessage = (value: V2TimMessage[]): TUIChatAction => {
@@ -114,3 +129,17 @@ export const setRepliedMessage = (value: {
     value: value,
   };
 };
+
+export const updateMessageReceipt = (value:{receipt:V2TimMessageReceipt[]}):TUIChatAction => {
+  return {
+    type:ACTION_TYPE.UPDATE_MESSAGE_RECEIPT,
+    value:value,
+  };
+}
+
+export const updateC2CMessageReceipt = (value:{receipt:V2TimMessageReceipt[]}):TUIChatAction => {
+  return {
+    type:ACTION_TYPE.UPDATE_C2C_MESSAGE_RECEIPT,
+    value:value,
+  };
+}

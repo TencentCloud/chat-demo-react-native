@@ -1,18 +1,14 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-
 buildscript {
     ext {
-        buildToolsVersion = "33.0.0"
-        minSdkVersion = 24
-        compileSdkVersion = 33
-        targetSdkVersion = 33
-        kotlinVersion = '1.6.10'
+        buildToolsVersion = "34.0.0"
+        minSdkVersion = 21
+        compileSdkVersion = 34
+        targetSdkVersion = 34
+        ndkVersion = "25.1.8937393"
+        kotlinVersion = "1.8.0"
         TimJs_compileSdkVersion=33
         TimJs_minSdkVersion=24
         TimJs_targetSdkVersion=33
-
-        // We use NDK 23 which has both M1 support and is the side-by-side NDK version from AGP.
-        ndkVersion = "23.1.7779620"
     }
     repositories {
         google()
@@ -20,10 +16,11 @@ buildscript {
         maven {url 'https://developer.huawei.com/repo/'}
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:7.3.1")
+        classpath("com.android.tools.build:gradle")
         classpath("com.facebook.react:react-native-gradle-plugin")
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath 'com.huawei.agconnect:agcp:1.4.1.300'
-        // classpath 'com.google.gms:google-services:4.3.14'
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
+        // classpath("com.huawei.agconnect:agcp:1.4.1.300")
     }
 }
+
+apply plugin: "com.facebook.react.rootproject"
