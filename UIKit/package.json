@@ -1,0 +1,28 @@
+{
+  "name": "@tencentcloud/chat-uikit-react-native",
+  "version": "1.1.0",
+  "repository": "https://github.com/TencentCloud/chat-demo-react-native",
+  "description": "Build In-App Chat & Audio/Video Call & Live Streaming in minutes with UIKit components for react-native.",
+  "main": "index.ts",
+  "scripts": {},
+  "keywords": [
+    "uikit",
+    "Chat",
+    "RN",
+    "react native",
+    "typescript",
+    "tencent",
+    "tencentcloud",
+    "messaging",
+    "WebSocket"
+  ],
+  "dependencies": {
+    "@tencentcloud/chat-uikit-engine": "latest",
+    "@tencentcloud/tui-core": "latest",
+    "@rneui/base": "4.0.0-rc.8",
+    "@rneui/themed": "4.0.0-rc.8",
+    "react-native-vector-icons": "10.2.0"
+  },
+  "author": "tencentcloud-im",
+  "license": "ISC"
+}

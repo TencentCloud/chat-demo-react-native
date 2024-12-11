@@ -1,0 +1,18 @@
+export const Call = {
+  CALL_START: '发起通话',
+  CALL_END: '通话结束',
+  CALL_DURATION: '通话时长',
+  CALL_CANCEL: '取消通话',
+  SWITCH_VOICE: '切换语音通话',
+  SWITCH_VIDEO: '切换视频通话',
+  ANSWERED: '已接听',
+  CANCELED: '已取消',
+  CANCELED_CALLER: '对方已取消',
+  DECLINED: '已拒绝',
+  DECLINED_USER: '对方已拒绝',
+  LINE_BUSY: '对方忙线中',
+  LINE_BUSY_NOT_RECEIVED: '忙线未接听',
+  NOT_ANSWER: '无应答',
+  NOT_ANSWER_USER: '对方无应答',
+  NOT_ANSWER_TIMEOUT: '超时无应答',
+};

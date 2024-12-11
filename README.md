@@ -14,7 +14,12 @@
 #### 👉🏻 Try Online Demo
 
 ### Quick Run Demo
-#### Step 1：Install Demo Source Code
+
+#### Step 1：Configuring the development environment
+If this is your first time developing a React Native project, refer to the React Native official steps [set-up-your-environment](https://reactnative.dev/docs/0.75/set-up-your-environment) to configure the development environment.
+If you encounter environment problems when creating or compiling the project, you can run `npx react-native doctor` for environment diagnostics.
+
+#### Step 2：Install Demo Source Code
 
 ```shell
 git clone https://github.com/TencentCloud/chat-demo-react-native.git
@@ -23,41 +28,23 @@ git clone https://github.com/TencentCloud/chat-demo-react-native.git
 ```shell
 cd chat-demo-react-native/Demo
 ```
+#### use yarn
+```shell
+yarn install
+```
 
+#### use npm
 ```shell
 npm i --legacy-peer-deps
 ```
 
-#### Step 2：Secure SDKAppID and secretKey
-Set the relevant parameters `SDKAppID` and `SECRETKEY` in the example code of the debug/GenerateTestUserSig.js file:
+#### Step 3：Secure SDKAppID and secretKey
+Set the relevant parameters `SDKAppID` and `SECRETKEY` in the example code of the `debug/GenerateTestUserSig.js` file:
 SDKAppID and SecretKey can be accessed by the [Chat Console](https://console.trtc.io/app):
 ![image](https://github.com/TencentCloud/chat-uikit-react/assets/57951148/09c7c16b-5ff8-4b2d-bb1b-b0bf72a754ed)
 
-#### Step 3：Getting permissions
-Client apps must acquire permission from users to get access to their media library and save files to their mobile storage. Once the permission is granted, users can send images and videos to other users and save media files.
 
-#### Android
-Add the following permissions to your android/app/src/main/AndroidManifest.xml file.
-```javascript
-<uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-<uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
-<uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
-<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-```
-
-#### iOS
-Add the following permission usage descriptions to your info.plist file.
-```javascript
-<key>NSCameraUsageDescription</key>
-<string> we would like to use your camera</string>
-<key>NSPhotoLibraryUsageDescription</key>
-<string> we would like to use your photo library</string>
-<key>NSMicrophoneUsageDescription</key>
-<string>we would like to use your microphone</string>
-```
-
-#### Step 4：Run Demo
+### Step 4：Run Demo
 To compile and run the project, you need to use a real device or an emulator. It is recommended to use a real device. You can refer to the React Native official website [running-on-device](https://reactnative.dev/docs/running-on-device) for connecting a real device for debugging.
 
 #### Android
@@ -85,10 +72,27 @@ cd ../
 npm run ios
 ```
 
+## FAQs
+1、When running npm run android and an error occurs as shown in the image, please reset the environment variables in the project root directory.
+![image](https://cloudcache.intl.tencent-cloud.com/cms/backend-cms/7eeeed1065a711efb66652540055f650.png)
+```javascript
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+```
+
+2、If executing the Build command in Xcode prompts an issue with the node environment variables, please proceed as follows:
+![image](https://cloudcache.intl.tencent-cloud.com/cms/backend-cms/65fcdae165ab11efb66652540055f650.png)
+```javascript
+cd ios
+echo export NODE_BINARY=$(command -v node) > .xcode.env
+```
+
 ## Documentation
 - [Home page](https://trtc.io/document/66036?platform=react%20native&product=chat&menulabel=uikit)
 - [@tencentcloud/chat-uikit-react-native npm](https://www.npmjs.com/package/@tencentcloud/chat-uikit-react-native)
 - [Chat SDK](https://trtc.io/document/34309?platform=web&product=chat)
+
 
 ## Contact Us
 Join a Tencent Cloud Chat developer group for Reliable technical support & Product details & Constant exchange of ideas.
@@ -96,6 +100,3 @@ Join a Tencent Cloud Chat developer group for Reliable technical support & Produ
 - WhatsApp group (EN): [join](https://chat.whatsapp.com/Gfbxk7rQBqc8Rz4pzzP27A)
 - Telegram group (ZH): [join](https://t.me/tencent_imsdk)
 - WhatsApp group (ZH): [join](https://chat.whatsapp.com/IVa11ZkVmKTEwSWsAzSyik)
-
-
-
