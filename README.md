@@ -13,6 +13,10 @@
 
 #### 👉🏻 Try Online Demo
 
+### Integrating chat-uikit-react-native
+In this tutorial, you can build a free chatting application in just 10 minutes by integrating chat uikit using react native
+[<img src="https://web.sdk.qcloud.com/im/assets/images/build_react_native_chat.png" width="800"/>](https://www.youtube.com/watch?v=A76yF_7ReQE)
+
 ### Quick Run Demo
 
 #### Step 1：Configuring the development environment

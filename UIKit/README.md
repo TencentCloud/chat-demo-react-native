@@ -5,6 +5,10 @@
 
 > In respect for the copyright of the emoji design, the Chat Demo/TUIKit project does not include the cutouts of large emoji elements. Please replace them with your own designed or copyrighted emoji packs before the official launch for commercial use. The default small yellow face emoji pack is copyrighted by Tencent Cloud and can be authorized for a fee. If you wish to obtain authorization, please [submit a ticket](https://console.tencentcloud.com/workorder/category?level1_id=29&level2_id=40&source=14&data_title=Chat&step=1) to contact us.
 
+## Integrating chat-uikit-react-native
+In this tutorial, you can build a free chatting application in just 10 minutes by integrating chat uikit using react native
+[<img src="https://web.sdk.qcloud.com/im/assets/images/build_react_native_chat.png" width="800"/>](https://www.youtube.com/watch?v=A76yF_7ReQE)
+
 ## Before getting started
 This section shows the prerequisites you need to check to use `@tencentcloud/chat-uikit-react-native`.
 
