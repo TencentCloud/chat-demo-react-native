@@ -1,325 +1,170 @@
-# About chat-uikit-react-native
-[chat-uikit-react-native](https://www.npmjs.com/package/@tencentcloud/chat-uikit-react-native) is a React Native UI component library based on Tencent Cloud Chat SDK. It provides universally used UI components that include ConversationList, Chat, and Group components. Leveraging these meticulously crafted UI components, you can quickly construct an elegant, reliable, and scalable Chat application.
+# @tencentcloud/chat-uikit-react-native
 
-![Image](https://qcloudimg.tencent-cloud.cn/image/document/5ac14f4c90cf1cdfebff3a659f4dc065.png)
+> Tencent Cloud IM Chat UIKit for React Native — **20 business components + 22 ready-to-use Screens**, install all dependencies with a single `npm install`, built on top of [`tuikit-atomicx-react-native`](../tuikit-atomicx-react-native) to bridge the native SDK.
 
-> In respect for the copyright of the emoji design, the Chat Demo/TUIKit project does not include the cutouts of large emoji elements. Please replace them with your own designed or copyrighted emoji packs before the official launch for commercial use. The default small yellow face emoji pack is copyrighted by Tencent Cloud and can be authorized for a fee. If you wish to obtain authorization, please [submit a ticket](https://console.tencentcloud.com/workorder/category?level1_id=29&level2_id=40&source=14&data_title=Chat&step=1) to contact us.
+[![npm](https://img.shields.io/badge/npm-%40tencentcloud%2Fchat--uikit--react--native-blue)](https://www.npmjs.com/package/@tencentcloud/chat-uikit-react-native) [![version](https://img.shields.io/badge/version-3.0.0-green)]() [![RN](https://img.shields.io/badge/React%20Native-%3E%3D0.74-blue)]()
 
-## Integrating chat-uikit-react-native
-In this tutorial, you can build a free chatting application in just 10 minutes by integrating chat uikit using react native
-[<img src="https://web.sdk.qcloud.com/im/assets/images/build_react_native_chat.png" width="800"/>](https://www.youtube.com/watch?v=A76yF_7ReQE)
 
-## Before getting started
-This section shows the prerequisites you need to check to use `@tencentcloud/chat-uikit-react-native`.
+---
 
-### Requirements
- - React Native 0.75.0
- - Nodejs 18 or newer
- - JDK 17 or newer
- - Xcode version 14.0 or newer
- - Android Studio
+## 📦 Installation
 
-More details, please see https://reactnative.dev/docs/environment-setup
+> **Requirements**: React Native `>= 0.80`, Node `>= 22.11.0`, npm `>= 7` (npm 7+ auto-installs peer dependencies).
 
-## Getting started
-This section gives you information you need to get started with chat-uikit-react-native.
+This package declares **11 peer dependencies** — all required. npm 7+ auto-installs them on `npm install`.
 
-### Create a project
-You can get started by creating a project with `react-native 0.75.0`. (highly recommended to use typescript)
+> ⚠️ **Expo Go does not work** — this UIKit requires custom native modules (nitro, sound, video, etc.). Use **Expo prebuild** + a custom dev client.
 
-``` shell
-npx @react-native-community/cli@latest init ChatApp --version 0.75.0
+```bash
+# 1. Install the package + all 11 peerDeps (Expo picks Expo-compatible versions)
+npx expo install @tencentcloud/chat-uikit-react-native \
+  react-i18next i18next \
+  react-native-nitro-modules \
+  react-native-nitro-sound \
+  react-native-video \
+  react-native-create-thumbnail \
+  react-native-image-picker \
+  @react-native-documents/picker \
+  @react-native-async-storage/async-storage \
+  react-native-safe-area-context \
+  react-native-screens
+
+# 2. Prebuild native projects
+npx expo prebuild --clean
+
+# 3. Build with EAS or local dev client
+npx expo run:ios
+npx expo run:android
 ```
 
-Navigate to the app directory
-``` shell
-cd ChatApp
-```
+## 🔐 Permissions
 
-### Install chat-uikit-react-native
-chat-uikit-react-native can be installed through either `yarn` or `npm`
+This UIKit requires **camera**, **microphone**, **storage/media**, and **network** permissions. Configure them **before** the first build.
 
-#### use npm
-```shell
-npm install @tencentcloud/chat-uikit-react-native
-```
+Add the following to `app.json` under `expo`:
 
-#### use yarn
-```shell
-yarn add @tencentcloud/chat-uikit-react-native
-```
-
-### Install media library Dependencies
-
-#### use npm
-```shell
-npm install react-native-image-picker react-native-document-picker react-native-video
-```
-
-#### use yarn
-```shell
-yarn add react-native-image-picker react-native-document-picker react-native-video
-```
-
-## Getting permissions
-Client apps must acquire permission from users to get access to their media library and save files to their mobile storage. Once the permission is granted, users can send images and videos to other users and save media files.
-
-### Android
-
-Add the following permissions to your `android/app/src/main/AndroidManifest.xml` file.
-```xml
-  <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-  <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
-  <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
-  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-```
-### iOS
-
-Add the following permission usage descriptions to your `info.plist` file.
-
-```
-  <key>NSCameraUsageDescription</key>
-  <string> we would like to use your camera</string>
-  <key>NSPhotoLibraryUsageDescription</key>
-  <string> we would like to use your photo library</string>
-  <key>NSMicrophoneUsageDescription</key>
-  <string>we would like to use your microphone</string>
-```
-
-## Login chat-uikit-react-native
-
-Now you can use `TUILogin` login to `chat-uikit-react-native`.
-
-The `options` parameter is of the `Object` type. It contains the following attribute values:
-| Name | Type | Description |
-| --- | --- | --- |
-| SDKAppID | number | Required, SDKAppID of the chat app |
-| userID | string | Required, user ID|
-| userSig |string | Required, the password with which the user logs in to the Chat console. It is essentially the ciphertext generated by encrypting information such as the UserID. For the detailed generation method, see [Generating UserSig](https://trtc.io/document/34385) |
-| useUploadPlugin | boolean | Optional, whether to use the upload plugin, the default is false |
-| framework | string \| undefined | Required, UI framework type, optional values: `rn`、`undefined` |
-
-```tsx
-import { TUILogin } from '@tencentcloud/tui-core';
-TUILogin.login(options);
-```
-
-## Integration with navigation library
-
-Now you can create a screen and integrate it with a navigation library like [react-navigation](https://reactnavigation.org/). 
-
-### Install react-navigation
-react-navigation can be installed through either `yarn` or `npm`
-
-#### use npm
-```shell
-npm install @react-navigation/native react-native-screens react-native-safe-area-context @react-navigation/native-stack
-```
-
-#### use yarn
-```shell
-yarn add @react-navigation/native react-native-screens react-native-safe-area-context @react-navigation/native-stack
-```
-
-The example below shows how to integrate using `react-navigation`.
-
-### Create a fragments and screens
-
-Create a new `Screens.tsx` in the same directory as `App.tsx`.
-
-```tsx
-import React from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { ConversationList, Chat, ChatSetting } from '@tencentcloud/chat-uikit-react-native';
-
-export const ConversationListScreen = () => {
-  const navigation = useNavigation<any>();
-  const onPressConversation = () => {
-    navigation.navigate('Chat');
-  };
-  return (
-    <ConversationList onPressConversation={onPressConversation} />
-  );
-};
-
-export const ChatScreen = () => {
-  const navigation = useNavigation<any>();
-  const navigateBack = () => {
-    navigation.goBack();
-  };
-  const navigateToChatSetting = () => {
-    navigation.navigate('ChatSetting');
-  };
-  return (
-    <Chat
-      navigateBack={navigateBack}
-      navigateToChatSetting={navigateToChatSetting}
-    />
-  );
-};
-
-export const ChatSettingScreen = () => {
-  const navigation = useNavigation<any>();
-  // Navigate to Chat when you click header back button.
-  const navigateBack = () => {
-    navigation.goBack();
-  };
-  // Navigate to Chat when you click the send message button.
-  const navigateToChat = () => {
-    navigation.goBack();
-  };
-  // Navigate to ConversationList when you disband group or leave group.
-  const navigateToConversationList = () => {
-    navigation.navigate('ConversationList');
-  };
-  return (
-    <ChatSetting
-      navigateBack={navigateBack}
-      navigateToChat={navigateToChat}
-      navigateToConversationList={navigateToConversationList}
-    />
-  );
-};
-```
-### Register screens to navigator
-```tsx
-import React from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  Image,
-  StyleSheet,
-} from 'react-native';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { UIKitProvider } from '@tencentcloud/chat-uikit-react-native';
-import resources from '@tencentcloud/chat-uikit-react-native/i18n';
-import { TUITranslateService } from '@tencentcloud/chat-uikit-engine';
-import { TUILogin } from '@tencentcloud/tui-core';
-import { ConversationListScreen, ChatScreen, ChatSettingScreen } from './Screens';
-
-const LoginScreen = () => {
-  const navigation = useNavigation<any>();
-  // Init localization
-  TUITranslateService.provideLanguages(resources);
-  TUITranslateService.useI18n('en-US');
-  // Login
-  const Login = () => {
-    TUILogin.login({
-      SDKAppID: 0,
-      userID: '',
-      userSig: '',
-      useUploadPlugin: true,
-      framework: 'rn',
-    }).then(() => {
-      navigation.navigate('ConversationList');
-    });
+```jsonc
+{
+  "expo": {
+    "ios": {
+      "infoPlist": {
+        "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to use your camera",
+        "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photo library",
+        "NSPhotoLibraryAddUsageDescription": "Allow $(PRODUCT_NAME) to save images to your library",
+        "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to use your microphone",
+        "NSDocumentsFolderUsageDescription": "Allow $(PRODUCT_NAME) to access your documents"
+      }
+    },
+    "android": {
+      "permissions": [
+        "INTERNET",
+        "ACCESS_NETWORK_STATE",
+        "ACCESS_WIFI_STATE",
+        "CAMERA",
+        "RECORD_AUDIO",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "READ_MEDIA_IMAGES",
+        "READ_MEDIA_VIDEO",
+        "READ_MEDIA_AUDIO",
+        "VIBRATE",
+        "WAKE_LOCK"
+      ]
+    }
   }
+}
+```
 
+> **Note**: After adding permissions, run `npx expo prebuild --clean` to regenerate native projects with the new permissions.
+
+---
+
+## 🚀 Quick Start (3 steps)
+
+> **Why copy `screens/` to local?** The 22 screens are the **view layer** — you'll almost always want to tweak them (your brand, your flow, your i18n strings). Keeping them in `node_modules` makes them read-only. Copy once, edit freely.
+
+### Step 1 — Copy screens into your project
+
+```bash
+mkdir -p src/screens
+cp -R node_modules/@tencentcloud/chat-uikit-react-native/src/screens/. src/screens/
+```
+
+### Step 2 — Wire up `App.tsx`
+
+```tsx
+import React, { useState } from 'react'
+import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
+import { NavigationContainer } from '@react-navigation/native'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+
+import {
+  LoginScreen, ChatScreen, ChatSettingScreen,
+  ConversationListScreen, ContactListScreen, SearchScreen,
+  AddFriendScreen, AddGroupScreen, ApplicationVerifyScreen,
+  BlackListScreen, ContactInfoScreen, FriendApplicationListScreen,
+  GroupApplicationListScreen, GroupListScreen, SetRemarkScreen,
+  GroupManagementScreen, GroupMemberListScreen, GroupTypeInfoScreen,
+  CreateGroupScreen, SearchInConversationScreen, UserFilterScreen,
+  UserPickerScreen, BottomTabBar, type BottomTabKey,
+} from './src/screens'
+
+import { ToastRoot } from '@tencentcloud/chat-uikit-react-native'
+
+const Stack = createNativeStackNavigator()
+
+const MainScreen: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<BottomTabKey>('message')
   return (
-    <View style={styles.container}>
-      <Image
-        style={styles.logo}
-        source={{uri:'https://web.sdk.qcloud.com/im/assets/images/tencent_rtc_logo.png'}}
-      />
-      <TouchableOpacity style={styles.buttonContainer} onPress={Login}>
-        <Text style={styles.buttonText}>Log in</Text>
-      </TouchableOpacity>
+    <View style={styles.mainScreen}>
+      {activeTab === 'message' ? <ConversationListScreen /> : <ContactListScreen />}
+      <BottomTabBar current={activeTab} onChange={setActiveTab} />
     </View>
-  );
-};
+  )
+}
 
-const Navigation = () => {
-  const Stack = createNativeStackNavigator();
+export default function App(): React.JSX.Element {
+  const isDarkMode = useColorScheme() === 'dark'
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{ headerShown: false }}
-        initialRouteName="Login">
-        <Stack.Screen
-          name="Login"
-          component={LoginScreen} />
-        <Stack.Screen
-          name="ConversationList"
-          component={ConversationListScreen} />
-        <Stack.Screen
-          name="Chat"
-          component={ChatScreen} />
-        <Stack.Screen
-          name="ChatSetting"
-          component={ChatSettingScreen}/>
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-};
+    <SafeAreaProvider>
+      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      <ToastRoot />
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Main" component={MainScreen} />
+          <Stack.Screen name="Chat" component={ChatScreen} />
+          <Stack.Screen name="Search" component={SearchScreen} />
+          <Stack.Screen name="ChatSetting" component={ChatSettingScreen} />
+          <Stack.Screen name="AddFriend" component={AddFriendScreen} />
+          <Stack.Screen name="AddGroup" component={AddGroupScreen} />
+          <Stack.Screen name="ApplicationVerify" component={ApplicationVerifyScreen} />
+          <Stack.Screen name="BlackList" component={BlackListScreen} />
+          <Stack.Screen name="ContactInfo" component={ContactInfoScreen} />
+          <Stack.Screen name="FriendApplicationList" component={FriendApplicationListScreen} />
+          <Stack.Screen name="GroupApplicationList" component={GroupApplicationListScreen} />
+          <Stack.Screen name="GroupList" component={GroupListScreen} />
+          <Stack.Screen name="SetRemark" component={SetRemarkScreen} />
+          <Stack.Screen name="GroupManagement" component={GroupManagementScreen} />
+          <Stack.Screen name="GroupMemberList" component={GroupMemberListScreen} />
+          <Stack.Screen name="GroupTypeInfo" component={GroupTypeInfoScreen} />
+          <Stack.Screen name="CreateGroup" component={CreateGroupScreen} />
+          <Stack.Screen name="SearchInConversation" component={SearchInConversationScreen} />
+          <Stack.Screen name="UserFilter" component={UserFilterScreen} />
+          <Stack.Screen name="UserPicker" component={UserPickerScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
+  )
+}
 
-const App = () => {
-  return (
-    <UIKitProvider>
-      <Navigation />
-    </UIKitProvider>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-  },
-  logo: {
-    width: 232,
-    height: 80,
-  },
-  buttonContainer: {
-    width: '80%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 11,
-    borderRadius: 5,
-    backgroundColor: '#2F80ED',
-  },
-  buttonText: {
-    fontSize: 18,
-    lineHeight: 24,
-    color: '#FFFFFF',
-  },
-});
-
-export default App;
-
+const styles = StyleSheet.create({ mainScreen: { flex: 1, backgroundColor: '#F5F5F5' } })
 ```
 
-## Compile and Run ChatApp
-To compile and run the project, you need to use a real device or an emulator.A real device is recommended. You can refer to the React Native official website [running-on-device](https://reactnative.dev/docs/running-on-device) to connect a real device for debugging.
+> **Before first login**, edit `src/screens/LoginScreen.tsx` and set your `SDKAppID` / `SecretKey`. 
 
-#### Android
-1. Enable Developer Mode on your phone, and turn on theUSB Debugging switch.
-2. Connect your phone via USB. It's recommended to select the Transfer files option, do not choose the Charging only option.
-3. After confirming the successful connection of your phone, execute npm run android to compile and run the project.
 
-- npm
-```shell
-npm run android
-```
-- yarn
-```shell
-yarn android
-```
+## License
 
-#### iOS
-1. Connect your mobile phone with a USB cable, and open the ios directory of the project using Xcode.
-2. Configure the signing information according to the React Native official website [running-on-device](https://reactnative.dev/docs/running-on-device?platform=ios).
-3. Go to the ios directory and install dependencies.
-
-- npm
-```shell
-npm run ios
-```
-- yarn
-```shell
-yarn ios
-```
+Copyright © 2026 Tencent. All rights reserved.
