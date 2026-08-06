@@ -1,0 +1,366 @@
+
+export enum GroupPermission {
+  EDIT_GROUP_PROFILE_NAME = 'EDIT_GROUP_PROFILE_NAME',
+  EDIT_GROUP_PROFILE_AVATAR = 'EDIT_GROUP_PROFILE_AVATAR',
+  EDIT_GROUP_PROFILE_INTRODUCTION = 'EDIT_GROUP_PROFILE_INTRODUCTION',
+  EDIT_GROUP_PROFILE_NOTIFICATION = 'EDIT_GROUP_PROFILE_NOTIFICATION',
+  EDIT_GROUP_PROFILE_ELSE = 'EDIT_GROUP_PROFILE_ELSE',
+  REMOVE_MEMBER = 'REMOVE_MEMBER',
+  SET_MEMBER_ROLE = 'SET_MEMBER_ROLE',
+  MUTE_MEMBER = 'MUTE_MEMBER',
+  MUTE_ALL_MEMBERS = 'MUTE_ALL_MEMBERS',
+  TRANSFER_OWNERSHIP = 'TRANSFER_OWNERSHIP',
+  DISMISS_GROUP = 'DISMISS_GROUP',
+  QUIT_GROUP = 'QUIT_GROUP',
+}
+
+export enum GroupType {
+  Work = 'Work',
+  Public = 'Public',
+  Meeting = 'Meeting',
+  AVChatRoom = 'AVChatRoom',
+  Community = 'Community',
+}
+
+export enum GroupMemberRole {
+  UNDEFINED = 0,
+  MEMBER = 200,
+  ADMIN = 300,
+  OWNER = 400,
+}
+
+export enum GroupMemberFilterRole {
+  ALL = 0,
+  MEMBER = 200,
+  ADMIN = 300,
+  OWNER = 400,
+}
+
+type RolePermissions = Record<GroupPermission, boolean>
+
+type PermissionMatrix = Record<GroupType, Record<GroupMemberFilterRole, RolePermissions>>
+
+const PERMISSION_MATRIX: PermissionMatrix = {
+  [GroupType.Work]: {
+    [GroupMemberFilterRole.OWNER]: {
+      [GroupPermission.EDIT_GROUP_PROFILE_NAME]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_AVATAR]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_INTRODUCTION]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_NOTIFICATION]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_ELSE]: true,
+      [GroupPermission.REMOVE_MEMBER]: true,
+      [GroupPermission.SET_MEMBER_ROLE]: false,
+      [GroupPermission.MUTE_MEMBER]: false,
+      [GroupPermission.MUTE_ALL_MEMBERS]: false,
+      [GroupPermission.TRANSFER_OWNERSHIP]: true,
+      [GroupPermission.DISMISS_GROUP]: false,
+      [GroupPermission.QUIT_GROUP]: true,
+    },
+    [GroupMemberFilterRole.ADMIN]: {
+      [GroupPermission.EDIT_GROUP_PROFILE_NAME]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_AVATAR]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_INTRODUCTION]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_NOTIFICATION]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_ELSE]: false,
+      [GroupPermission.REMOVE_MEMBER]: false,
+      [GroupPermission.SET_MEMBER_ROLE]: false,
+      [GroupPermission.MUTE_MEMBER]: false,
+      [GroupPermission.MUTE_ALL_MEMBERS]: false,
+      [GroupPermission.TRANSFER_OWNERSHIP]: false,
+      [GroupPermission.DISMISS_GROUP]: false,
+      [GroupPermission.QUIT_GROUP]: true,
+    },
+    [GroupMemberFilterRole.MEMBER]: {
+      [GroupPermission.EDIT_GROUP_PROFILE_NAME]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_AVATAR]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_INTRODUCTION]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_NOTIFICATION]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_ELSE]: false,
+      [GroupPermission.REMOVE_MEMBER]: false,
+      [GroupPermission.SET_MEMBER_ROLE]: false,
+      [GroupPermission.MUTE_MEMBER]: false,
+      [GroupPermission.MUTE_ALL_MEMBERS]: false,
+      [GroupPermission.TRANSFER_OWNERSHIP]: false,
+      [GroupPermission.DISMISS_GROUP]: false,
+      [GroupPermission.QUIT_GROUP]: true,
+    },
+    [GroupMemberFilterRole.ALL]: {
+      [GroupPermission.EDIT_GROUP_PROFILE_NAME]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_AVATAR]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_INTRODUCTION]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_NOTIFICATION]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_ELSE]: false,
+      [GroupPermission.REMOVE_MEMBER]: false,
+      [GroupPermission.SET_MEMBER_ROLE]: false,
+      [GroupPermission.MUTE_MEMBER]: false,
+      [GroupPermission.MUTE_ALL_MEMBERS]: false,
+      [GroupPermission.TRANSFER_OWNERSHIP]: false,
+      [GroupPermission.DISMISS_GROUP]: false,
+      [GroupPermission.QUIT_GROUP]: false,
+    },
+  },
+
+  [GroupType.Public]: {
+    [GroupMemberFilterRole.OWNER]: {
+      [GroupPermission.EDIT_GROUP_PROFILE_NAME]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_AVATAR]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_INTRODUCTION]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_NOTIFICATION]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_ELSE]: true,
+      [GroupPermission.REMOVE_MEMBER]: true,
+      [GroupPermission.SET_MEMBER_ROLE]: true,
+      [GroupPermission.MUTE_MEMBER]: true,
+      [GroupPermission.MUTE_ALL_MEMBERS]: true,
+      [GroupPermission.TRANSFER_OWNERSHIP]: true,
+      [GroupPermission.DISMISS_GROUP]: true,
+      [GroupPermission.QUIT_GROUP]: false,
+    },
+    [GroupMemberFilterRole.ADMIN]: {
+      [GroupPermission.EDIT_GROUP_PROFILE_NAME]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_AVATAR]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_INTRODUCTION]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_NOTIFICATION]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_ELSE]: false,
+      [GroupPermission.REMOVE_MEMBER]: true,
+      [GroupPermission.SET_MEMBER_ROLE]: false,
+      [GroupPermission.MUTE_MEMBER]: true,
+      [GroupPermission.MUTE_ALL_MEMBERS]: true,
+      [GroupPermission.TRANSFER_OWNERSHIP]: false,
+      [GroupPermission.DISMISS_GROUP]: false,
+      [GroupPermission.QUIT_GROUP]: true,
+    },
+    [GroupMemberFilterRole.MEMBER]: {
+      [GroupPermission.EDIT_GROUP_PROFILE_NAME]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_AVATAR]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_INTRODUCTION]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_NOTIFICATION]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_ELSE]: false,
+      [GroupPermission.REMOVE_MEMBER]: false,
+      [GroupPermission.SET_MEMBER_ROLE]: false,
+      [GroupPermission.MUTE_MEMBER]: false,
+      [GroupPermission.MUTE_ALL_MEMBERS]: false,
+      [GroupPermission.TRANSFER_OWNERSHIP]: false,
+      [GroupPermission.DISMISS_GROUP]: false,
+      [GroupPermission.QUIT_GROUP]: true,
+    },
+    [GroupMemberFilterRole.ALL]: {
+      [GroupPermission.EDIT_GROUP_PROFILE_NAME]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_AVATAR]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_INTRODUCTION]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_NOTIFICATION]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_ELSE]: false,
+      [GroupPermission.REMOVE_MEMBER]: false,
+      [GroupPermission.SET_MEMBER_ROLE]: false,
+      [GroupPermission.MUTE_MEMBER]: false,
+      [GroupPermission.MUTE_ALL_MEMBERS]: false,
+      [GroupPermission.TRANSFER_OWNERSHIP]: false,
+      [GroupPermission.DISMISS_GROUP]: false,
+      [GroupPermission.QUIT_GROUP]: false,
+    },
+  },
+
+  [GroupType.Meeting]: {
+    [GroupMemberFilterRole.OWNER]: {
+      [GroupPermission.EDIT_GROUP_PROFILE_NAME]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_AVATAR]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_INTRODUCTION]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_NOTIFICATION]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_ELSE]: true,
+      [GroupPermission.REMOVE_MEMBER]: true,
+      [GroupPermission.SET_MEMBER_ROLE]: true,
+      [GroupPermission.MUTE_MEMBER]: true,
+      [GroupPermission.MUTE_ALL_MEMBERS]: true,
+      [GroupPermission.TRANSFER_OWNERSHIP]: true,
+      [GroupPermission.DISMISS_GROUP]: true,
+      [GroupPermission.QUIT_GROUP]: false,
+    },
+    [GroupMemberFilterRole.ADMIN]: {
+      [GroupPermission.EDIT_GROUP_PROFILE_NAME]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_AVATAR]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_INTRODUCTION]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_NOTIFICATION]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_ELSE]: false,
+      [GroupPermission.REMOVE_MEMBER]: true,
+      [GroupPermission.SET_MEMBER_ROLE]: false,
+      [GroupPermission.MUTE_MEMBER]: true,
+      [GroupPermission.MUTE_ALL_MEMBERS]: true,
+      [GroupPermission.TRANSFER_OWNERSHIP]: false,
+      [GroupPermission.DISMISS_GROUP]: false,
+      [GroupPermission.QUIT_GROUP]: true,
+    },
+    [GroupMemberFilterRole.MEMBER]: {
+      [GroupPermission.EDIT_GROUP_PROFILE_NAME]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_AVATAR]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_INTRODUCTION]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_NOTIFICATION]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_ELSE]: false,
+      [GroupPermission.REMOVE_MEMBER]: false,
+      [GroupPermission.SET_MEMBER_ROLE]: false,
+      [GroupPermission.MUTE_MEMBER]: false,
+      [GroupPermission.MUTE_ALL_MEMBERS]: false,
+      [GroupPermission.TRANSFER_OWNERSHIP]: false,
+      [GroupPermission.DISMISS_GROUP]: false,
+      [GroupPermission.QUIT_GROUP]: true,
+    },
+    [GroupMemberFilterRole.ALL]: {
+      [GroupPermission.EDIT_GROUP_PROFILE_NAME]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_AVATAR]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_INTRODUCTION]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_NOTIFICATION]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_ELSE]: false,
+      [GroupPermission.REMOVE_MEMBER]: false,
+      [GroupPermission.SET_MEMBER_ROLE]: false,
+      [GroupPermission.MUTE_MEMBER]: false,
+      [GroupPermission.MUTE_ALL_MEMBERS]: false,
+      [GroupPermission.TRANSFER_OWNERSHIP]: false,
+      [GroupPermission.DISMISS_GROUP]: false,
+      [GroupPermission.QUIT_GROUP]: false,
+    },
+  },
+
+  [GroupType.Community]: {
+    [GroupMemberFilterRole.OWNER]: {
+      [GroupPermission.EDIT_GROUP_PROFILE_NAME]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_AVATAR]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_INTRODUCTION]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_NOTIFICATION]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_ELSE]: true,
+      [GroupPermission.REMOVE_MEMBER]: true,
+      [GroupPermission.SET_MEMBER_ROLE]: true,
+      [GroupPermission.MUTE_MEMBER]: true,
+      [GroupPermission.MUTE_ALL_MEMBERS]: true,
+      [GroupPermission.TRANSFER_OWNERSHIP]: true,
+      [GroupPermission.DISMISS_GROUP]: true,
+      [GroupPermission.QUIT_GROUP]: false,
+    },
+    [GroupMemberFilterRole.ADMIN]: {
+      [GroupPermission.EDIT_GROUP_PROFILE_NAME]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_AVATAR]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_INTRODUCTION]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_NOTIFICATION]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_ELSE]: false,
+      [GroupPermission.REMOVE_MEMBER]: true,
+      [GroupPermission.SET_MEMBER_ROLE]: false,
+      [GroupPermission.MUTE_MEMBER]: true,
+      [GroupPermission.MUTE_ALL_MEMBERS]: true,
+      [GroupPermission.TRANSFER_OWNERSHIP]: false,
+      [GroupPermission.DISMISS_GROUP]: false,
+      [GroupPermission.QUIT_GROUP]: true,
+    },
+    [GroupMemberFilterRole.MEMBER]: {
+      [GroupPermission.EDIT_GROUP_PROFILE_NAME]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_AVATAR]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_INTRODUCTION]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_NOTIFICATION]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_ELSE]: false,
+      [GroupPermission.REMOVE_MEMBER]: false,
+      [GroupPermission.SET_MEMBER_ROLE]: false,
+      [GroupPermission.MUTE_MEMBER]: false,
+      [GroupPermission.MUTE_ALL_MEMBERS]: false,
+      [GroupPermission.TRANSFER_OWNERSHIP]: false,
+      [GroupPermission.DISMISS_GROUP]: false,
+      [GroupPermission.QUIT_GROUP]: true,
+    },
+    [GroupMemberFilterRole.ALL]: {
+      [GroupPermission.EDIT_GROUP_PROFILE_NAME]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_AVATAR]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_INTRODUCTION]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_NOTIFICATION]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_ELSE]: false,
+      [GroupPermission.REMOVE_MEMBER]: false,
+      [GroupPermission.SET_MEMBER_ROLE]: false,
+      [GroupPermission.MUTE_MEMBER]: false,
+      [GroupPermission.MUTE_ALL_MEMBERS]: false,
+      [GroupPermission.TRANSFER_OWNERSHIP]: false,
+      [GroupPermission.DISMISS_GROUP]: false,
+      [GroupPermission.QUIT_GROUP]: false,
+    },
+  },
+
+  [GroupType.AVChatRoom]: {
+    [GroupMemberFilterRole.OWNER]: {
+      [GroupPermission.EDIT_GROUP_PROFILE_NAME]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_AVATAR]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_INTRODUCTION]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_NOTIFICATION]: true,
+      [GroupPermission.EDIT_GROUP_PROFILE_ELSE]: true,
+      [GroupPermission.REMOVE_MEMBER]: false,
+      [GroupPermission.SET_MEMBER_ROLE]: false,
+      [GroupPermission.MUTE_MEMBER]: true,
+      [GroupPermission.MUTE_ALL_MEMBERS]: true,
+      [GroupPermission.TRANSFER_OWNERSHIP]: false,
+      [GroupPermission.DISMISS_GROUP]: false,
+      [GroupPermission.QUIT_GROUP]: true,
+    },
+    [GroupMemberFilterRole.ADMIN]: {
+      [GroupPermission.EDIT_GROUP_PROFILE_NAME]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_AVATAR]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_INTRODUCTION]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_NOTIFICATION]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_ELSE]: false,
+      [GroupPermission.REMOVE_MEMBER]: false,
+      [GroupPermission.SET_MEMBER_ROLE]: false,
+      [GroupPermission.MUTE_MEMBER]: false,
+      [GroupPermission.MUTE_ALL_MEMBERS]: false,
+      [GroupPermission.TRANSFER_OWNERSHIP]: false,
+      [GroupPermission.DISMISS_GROUP]: false,
+      [GroupPermission.QUIT_GROUP]: true,
+    },
+    [GroupMemberFilterRole.MEMBER]: {
+      [GroupPermission.EDIT_GROUP_PROFILE_NAME]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_AVATAR]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_INTRODUCTION]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_NOTIFICATION]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_ELSE]: false,
+      [GroupPermission.REMOVE_MEMBER]: false,
+      [GroupPermission.SET_MEMBER_ROLE]: false,
+      [GroupPermission.MUTE_MEMBER]: false,
+      [GroupPermission.MUTE_ALL_MEMBERS]: false,
+      [GroupPermission.TRANSFER_OWNERSHIP]: false,
+      [GroupPermission.DISMISS_GROUP]: false,
+      [GroupPermission.QUIT_GROUP]: true,
+    },
+    [GroupMemberFilterRole.ALL]: {
+      [GroupPermission.EDIT_GROUP_PROFILE_NAME]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_AVATAR]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_INTRODUCTION]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_NOTIFICATION]: false,
+      [GroupPermission.EDIT_GROUP_PROFILE_ELSE]: false,
+      [GroupPermission.REMOVE_MEMBER]: false,
+      [GroupPermission.SET_MEMBER_ROLE]: false,
+      [GroupPermission.MUTE_MEMBER]: false,
+      [GroupPermission.MUTE_ALL_MEMBERS]: false,
+      [GroupPermission.TRANSFER_OWNERSHIP]: false,
+      [GroupPermission.DISMISS_GROUP]: false,
+      [GroupPermission.QUIT_GROUP]: false,
+    },
+  },
+}
+
+export function hasPermission(
+  groupType: GroupType,
+  role: GroupMemberFilterRole,
+  permission: GroupPermission
+): boolean {
+  if (permission === GroupPermission.MUTE_ALL_MEMBERS) {
+     console.log('hasPermission', groupType, role, permission) 
+  }
+  return PERMISSION_MATRIX[groupType]?.[role]?.[permission] ?? false
+}
+
+export function getPermissions(
+  groupType: GroupType,
+  role: GroupMemberFilterRole
+): RolePermissions | null {
+  return PERMISSION_MATRIX[groupType]?.[role] ?? null
+}
+
+export function showGroupManagement(
+  groupType: GroupType,
+  role: GroupMemberFilterRole
+): boolean {
+  return (
+    hasPermission(groupType, role, GroupPermission.MUTE_MEMBER) ||
+    hasPermission(groupType, role, GroupPermission.MUTE_ALL_MEMBERS)
+  )
+}

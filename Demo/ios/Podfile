@@ -5,7 +5,7 @@ require Pod::Executable.execute_command('node', ['-p',
     {paths: [process.argv[1]]},
   )', __dir__]).strip
 
-platform :ios, min_ios_version_supported
+platform :ios, '16.0'
 prepare_react_native_project!
 
 linkage = ENV['USE_FRAMEWORKS']
@@ -14,27 +14,77 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
-target 'ReactNativeDemo' do
+target 'TuikitAtomicX' do
   config = use_native_modules!
 
   use_react_native!(
     :path => config[:reactNativePath],
-    # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
-  target 'ReactNativeDemoTests' do
-    inherit! :complete
-    # Pods for testing
+  # 插件原子 SDK 依赖已通过 use_native_modules! 自动链接（来自 tuikit-atomicx-react-native 包）
+  # autolink 会自动安装：AtomicXCore / TXIMSDK_Plus_iOS_XCFramework / SnapKit
+
+  # v18.92 修复：nitro-sound 0.2.15 Sound.swift 用了 iOS 8.0 弃用的 .allowBluetooth API
+  # —— iOS 26 SDK 改名为 .allowBluetoothHFP（AVAudioSession.CategoryOptions namespace）
+  # —— Swift 6.3.3 编译器对 deprecation 升级为 error（不再是 warning）
+  # —— 6 处调用全在 .allowBluetooth 模式（4 处 ] 结尾 + 2 处 , .mixWithOthers 结尾）
+  # —— 修：pod install 时自动 patch 源文件，防 npm install 重置
+  pre_install do |installer|
+    nitrosound_sound_swift = File.join(installer.sandbox.root, '..', 'node_modules', 'react-native-nitro-sound', 'ios', 'Sound.swift')
+    if File.exist?(nitrosound_sound_swift)
+      content = File.read(nitrosound_sound_swift)
+      patched = content.gsub('.allowBluetooth]', '.allowBluetoothHFP]')
+      # 第二轮：处理 .allowBluetooth, .mixWithOthers 这种非 ] 结尾的
+      patched = patched.gsub('.allowBluetooth,', '.allowBluetoothHFP,')
+      if patched != content
+        File.write(nitrosound_sound_swift, patched)
+        Pod::UI.puts '[v18.92] Patched nitro-sound Sound.swift: .allowBluetooth → .allowBluetoothHFP'
+      end
+    end
   end
 
   post_install do |installer|
-    # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        # AtomicXCore 4.2.4 Swift module (CxxStdlib) 要求 iOS 16+，
+        # 强制把所有 Pods target 的 IPHONEOS_DEPLOYMENT_TARGET 提升到 16.0
+        if Gem::Version.new(config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] || '0') < Gem::Version.new('16.0')
+          config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '16.0'
+        end
+
+        # v18.92 修复：Xcode 26.6 + Swift 6.3.3 + nitro-sound 0.2.15 PhaseScriptExecution failed
+        # —— 根因：nitro-modules 0.36.1 用 SWIFT_OBJC_INTEROP_MODE = objcxx（C++20 + Swift 互操作）
+        #   NitroSound-Swift-Cxx-Bridge.cpp 用了 std::function<std::string> + std::exception_ptr
+        #   Swift 6.3 默认 cxx-interoperability-mode = "default" 触发 issue #718
+        #   （C++ std::optional has_value() / Swift bridging 符号冲突）
+        # —— 修：给 NitroSound + NitroModules target 强制设 OTHER_SWIFT_FLAGS
+        #   显式 cxx-interoperability-mode=default（issue 718 推荐的 explicit 模式）
+        if ['NitroSound', 'NitroModules'].include?(target.name)
+          existing_flags = config.build_settings['OTHER_SWIFT_FLAGS'] || '$(inherited)'
+          unless existing_flags.include?('cxx-interoperability-mode')
+            config.build_settings['OTHER_SWIFT_FLAGS'] = "#{existing_flags} -Xfrontend -cxx-interoperability-mode=default"
+          end
+        end
+
+        # v18.92 修复：NitroModules 在新架构下 NativeNitroModules+OldArch.mm 是空文件
+        # —— 文件全部 #ifndef RCT_NEW_ARCH_ENABLED 包裹，编译产生 0 符号
+        # —— ld 阶段报 "'NativeNitroModules+OldArch.o' has no symbols"
+        # —— Xcode 15+ 把 link warning 升级为 error → 真机 build 失败
+        # —— 修：抑制 link warning（不让 'no symbols' 升级 error）
+        if target.name == 'NitroModules'
+          existing_ldflags = config.build_settings['OTHER_LDFLAGS'] || '$(inherited)'
+          unless existing_ldflags.include?('no_warn_duplicate_libraries')
+            config.build_settings['OTHER_LDFLAGS'] = "#{existing_ldflags} -Xlinker -no_warn_duplicate_libraries"
+          end
+        end
+      end
+    end
+
     react_native_post_install(
       installer,
       config[:reactNativePath],
       :mac_catalyst_enabled => false,
-      # :ccache_enabled => true
     )
   end
 end

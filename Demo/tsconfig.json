@@ -1,6 +1,20 @@
 {
+  "extends": "@react-native/typescript-config",
   "compilerOptions": {
-    "jsx": "react"
+    "types": ["jest"],
+    "baseUrl": ".",
+    "paths": {
+      "chat-uikit-react-native": ["../chat-uikit-react-native/src/index.ts"],
+      "chat-uikit-react-native/*": ["../chat-uikit-react-native/src/*"]
+    }
   },
-  "extends": "@react-native/typescript-config/tsconfig.json"
+  "include": [
+    "App.tsx",
+    "index.js",
+    "src/**/*",
+    "../chat-uikit-react-native/src/**/*",
+    "__tests__/**/*.ts",
+    "__tests__/**/*.tsx"
+  ],
+  "exclude": ["**/node_modules", "**/Pods", "**/build", "../chat-uikit-react-native/node_modules"]
 }
