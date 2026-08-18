@@ -9,9 +9,7 @@
 > 
 > submit a ticket url：https://console.tencentcloud.com/workorder/category?level1_id=29&level2_id=40&source=14&data_title=Chat&step=1
 
-![image](https://cloudcache.intl.tencent-cloud.com/cms/backend-cms/314a8601a26911efa0b3525400bdab9d.png)
-
-#### 👉🏻 Try Online Demo
+![image](https://web.sdk.qcloud.com/im/assets/images/react_native_image.png)
 
 ### Integrating chat-uikit-react-native
 In this tutorial, you can build a free chatting application in just 10 minutes by integrating chat uikit using react native
@@ -44,11 +42,14 @@ npm i --legacy-peer-deps
 
 #### Step 3：Secure SDKAppID and secretKey
 Set the relevant parameters `SDKAppID` and `SECRETKEY` in the example code of the `debug/GenerateTestUserSig.js` file:
-SDKAppID and SecretKey can be accessed by the [Chat Console](https://console.trtc.io/app):
+SDKAppID and SecretKey can be accessed by the [Chat Console](console.trtc.io/chat/detail):
 ![image](https://github.com/TencentCloud/chat-uikit-react/assets/57951148/09c7c16b-5ff8-4b2d-bb1b-b0bf72a754ed)
 
 
 ### Step 4：Run Demo
+
+> **Before first login**, edit `src/screens/LoginScreen.tsx` and set your `SDKAppID` / `SecretKey`.
+
 To compile and run the project, you need to use a real device or an emulator. It is recommended to use a real device. You can refer to the React Native official website [running-on-device](https://reactnative.dev/docs/running-on-device) for connecting a real device for debugging.
 
 #### Android
@@ -95,7 +96,6 @@ echo export NODE_BINARY=$(command -v node) > .xcode.env
 ## Documentation
 - [Home page](https://trtc.io/document/66036?platform=react%20native&product=chat&menulabel=uikit)
 - [@tencentcloud/chat-uikit-react-native npm](https://www.npmjs.com/package/@tencentcloud/chat-uikit-react-native)
-- [Chat SDK](https://trtc.io/document/34309?platform=web&product=chat)
 
 
 ## Contact Us
