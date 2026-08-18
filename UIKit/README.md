@@ -1,43 +1,75 @@
 # @tencentcloud/chat-uikit-react-native
 
-> Tencent Cloud IM Chat UIKit for React Native — **20 business components + 22 ready-to-use Screens**, install all dependencies with a single `npm install`, built on top of [`tuikit-atomicx-react-native`](../tuikit-atomicx-react-native) to bridge the native SDK.
+> **Build in-app chat, messaging, audio/video calls & live streaming in minutes.**
+> A feature-rich React Native UI Kit for Tencent Cloud IM — **22 ready-to-use screens** (conversations, chat, friends, groups, search), full internationalization (i18n), and overseas-friendly design.
 
-[![npm](https://img.shields.io/badge/npm-%40tencentcloud%2Fchat--uikit--react--native-blue)](https://www.npmjs.com/package/@tencentcloud/chat-uikit-react-native) [![version](https://img.shields.io/badge/version-3.0.0-green)]() [![RN](https://img.shields.io/badge/React%20Native-%3E%3D0.74-blue)]()
-
+[![npm](https://img.shields.io/badge/npm-v3.0.0-blue)](https://www.npmjs.com/package/@tencentcloud/chat-uikit-react-native)
+[![React Native](https://img.shields.io/badge/React%20Native-%3E%3D0.80-green)]()
+[![Node](https://img.shields.io/badge/Node-%3E%3D22-brightgreen)]()
+[![TypeScript](https://img.shields.io/badge/TypeScript-ready-3178c6)]()
+[![i18n](https://img.shields.io/badge/i18n-ready-orange)]()
 
 ---
 
-## 📦 Installation
+## 📸 Screenshots
 
-> **Requirements**: React Native `>= 0.80`, Node `>= 22.11.0`, npm `>= 7` (npm 7+ auto-installs peer dependencies).
+<p align="center">
+  <img src="https://web.sdk.qcloud.com/im/assets/images/react_native_image.png" alt="Demo screenshot" />
+</p>
 
-This package declares **11 peer dependencies** — all required. npm 7+ auto-installs them on `npm install`.
+---
+
+## Before getting started
+This section shows the prerequisites you need to check to use Chat UIKit for React-Native.
+
+### Requirements
+- React Native `>= 0.80`
+- Node `>= 22`
+- iOS `>= 16`
+- Android `>= 24`
+
+More details, please see https://reactnative.dev/docs/environment-setup
+
+<br/>
+
+## 🚀 Getting Start
+This section gives you information you need to get started with Chat UIKit for React-Native.
+
+
+### Step 1 — Create a project (Expo)
+
+```bash
+npx create-expo-app@latest my-app --template blank-typescript
+cd my-app
+```
+
+### Step 2 — Install UIKit for React-Native
+
+```bash
+npx expo install @tencentcloud/chat-uikit-react-native tuikit-atomicx-react-native \
+  react-i18next i18next \
+  react-native-nitro-modules react-native-nitro-sound \
+  react-native-video react-native-create-thumbnail \
+  react-native-image-picker @react-native-documents/picker \
+  @react-native-async-storage/async-storage \
+  react-native-safe-area-context react-native-screens \
+  @react-navigation/native @react-navigation/native-stack
+```
 
 > ⚠️ **Expo Go does not work** — this UIKit requires custom native modules (nitro, sound, video, etc.). Use **Expo prebuild** + a custom dev client.
 
+### Step 3 — Prebuild & run
+
 ```bash
-# 1. Install the package + all 11 peerDeps (Expo picks Expo-compatible versions)
-npx expo install @tencentcloud/chat-uikit-react-native \
-  react-i18next i18next \
-  react-native-nitro-modules \
-  react-native-nitro-sound \
-  react-native-video \
-  react-native-create-thumbnail \
-  react-native-image-picker \
-  @react-native-documents/picker \
-  @react-native-async-storage/async-storage \
-  react-native-safe-area-context \
-  react-native-screens
-
-# 2. Prebuild native projects
 npx expo prebuild --clean
-
-# 3. Build with EAS or local dev client
-npx expo run:ios
-npx expo run:android
+npx expo run:ios      # or: npx expo run:android
 ```
 
-## 🔐 Permissions
+> For full integration steps (permission config, route mounting, login parameters), see the official documentation.
+
+---
+
+## Getting permissions
 
 This UIKit requires **camera**, **microphone**, **storage/media**, and **network** permissions. Configure them **before** the first build.
 
@@ -79,7 +111,9 @@ Add the following to `app.json` under `expo`:
 
 ---
 
-## 🚀 Quick Start (3 steps)
+## 🚀 Implementation guide
+
+To help you get up and running with Chat UIKit more easily, we have provided convenient built-in screens to facilitate quick implementation.
 
 > **Why copy `screens/` to local?** The 22 screens are the **view layer** — you'll almost always want to tweak them (your brand, your flow, your i18n strings). Keeping them in `node_modules` makes them read-only. Copy once, edit freely.
 

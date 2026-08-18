@@ -1,21 +1,30 @@
 {
   "name": "@tencentcloud/chat-uikit-react-native",
-  "version": "3.0.0",
-  "description": "Tencent Cloud Chat UIKit for React Native - 11 chat UI components + i18n + utils, built on top of tuikit-atomicx-react-native. Pure JS/TS package, no native code.",
+  "version": "3.0.1",
+  "description": "Build in-app chat, messaging, audio/video calls and live streaming in minutes with a feature-rich React Native UI Kit. Prebuilt chat, group, contact and conversation components with internationalization (i18n). Powered by Tencent Cloud IM.",
+  "keywords": [
+    "react-native", "chat", "messaging", "im",
+    "uikit", "tuikit", "tencent", "tencentcloud",
+    "in-app chat", "in-app messaging", "real-time", "conversation",
+    "group chat", "social", "audio", "video",
+    "call", "live streaming", "expo", "cross-platform",
+    "i18n", "internationalization", "typescript", "ios", "android"
+  ],
+  "homepage": "https://trtc.io/document/56573?product=chat&menulabel=uikit&platform=react%20native",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TencentCloud/chat-demo-react-native.git",
+    "directory": "UIKit"
+  },
+  "bugs": {
+    "url": "https://github.com/TencentCloud/chat-demo-react-native/issues"
+  },
   "main": "src/index.ts",
   "types": "src/index.ts",
   "react-native": "src/index.ts",
   "files": [
     "src",
     "README.md"
-  ],
-  "keywords": [
-    "react-native",
-    "tuikit",
-    "tencent",
-    "chat",
-    "im",
-    "uikit"
   ],
   "scripts": {
     "tsc": "tsc --noEmit",
